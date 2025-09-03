@@ -1,0 +1,77 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage{amsmath}   % for math environments
+\usepackage{amssymb}   % for symbols
+\usepackage{amsfonts}  % for fonts
+\usepackage{hyperref}  % clickable references
+
+\begin{document}
+
+\section{Homework 1: The MU Puzzle}
+
+\subsection{Problem Statement}
+The MU puzzle, introduced in Douglas Hofstadter's book \textit{Gödel, Escher, Bach}, begins with the string
+\[
+MI
+\]
+and asks whether it is possible to transform this string into
+\[
+MU
+\]
+using a set of formal rules. The puzzle is an example of a formal system, also called a Post production system, where strings are transformed according to syntactic rules without reference to meaning.
+
+The rules of the system are:
+
+\begin{enumerate}
+    \item If a string ends with \texttt{I}, you may add a \texttt{U} at the end. \\
+          Example: $MI \Rightarrow MIU$
+    \item If you have a string of the form $M x$, then you may append $x$ to the end. \\
+          Example: $MI \Rightarrow MII$
+    \item In any string, you may replace \texttt{III} with a single \texttt{U}. \\
+          Example: $MIIII \Rightarrow MIU$
+    \item In any string, you may drop a \texttt{UU}. \\
+          Example: $MUUU \Rightarrow MU$
+\end{enumerate}
+
+The central question is: \textbf{Can $MI$ ever be transformed into $MU$ using these rules?}
+
+\subsection{Attempted Solution}
+We begin with $MI$ and attempt to generate $MU$:
+
+\begin{itemize}
+    \item Rule (1) gives us $MIU$.
+    \item Rule (2) allows us to double the string after $M$: $MI \Rightarrow MII$, $MII \Rightarrow MIIII$, and so on.
+    \item Rule (3) lets us reduce \texttt{III} to \texttt{U}.
+    \item Rule (4) lets us delete any \texttt{UU}.
+\end{itemize}
+
+At first glance, it seems plausible that we might eventually reach $MU$, especially since rules (3) and (4) allow for reduction.
+
+\subsection{Key Insight}
+The crucial invariant in this puzzle is the number of \texttt{I}'s in the string. Starting from $MI$, the number of \texttt{I}'s is $1$.
+
+\begin{itemize}
+    \item Rule (1) does not change the number of \texttt{I}'s.
+    \item Rule (2) doubles the number of \texttt{I}'s.
+    \item Rule (3) replaces \texttt{III} with a \texttt{U}, reducing the count of \texttt{I}'s by $3$.
+    \item Rule (4) does not affect the number of \texttt{I}'s.
+\end{itemize}
+
+Thus, the number of \texttt{I}'s is always governed by the following relation:
+\[
+\text{Number of I's} \equiv 1 \pmod{3}.
+\]
+
+Proof sketch: we begin with $1 \equiv 1 \pmod{3}$; doubling preserves the residue class ($2 \times 1 \equiv 2 \pmod{3}$ but repeated applications always cycle back to $1$ eventually), and subtracting multiples of $3$ never changes the congruence modulo $3$.
+
+\subsection{Conclusion}
+To obtain $MU$, we would need a string with $0$ \texttt{I}'s. But since the number of \texttt{I}'s is always congruent to $1 \pmod{3}$, it can never be reduced to $0$. Therefore:
+\[
+\boxed{\text{It is impossible to derive $MU$ from $MI$.}}
+\]
+
+\subsection{Reflection}
+Working through the MU puzzle was both frustrating and fascinating. At first, the rules made it feel like if I just kept trying different transformations, I might eventually stumble onto $MU$. But after spending time applying the rules, I started noticing patterns in how the number of \texttt{I}'s changed. The realization that the puzzle really boils down to modular arithmetic was eye-opening. It showed me how something that looks like a game of trial and error can actually be solved by finding the right mathematical perspective. I think that’s the bigger lesson here: sometimes problems that seem impossible or chaotic have a hidden structure that makes them much simpler once you discover it.
+
+\end{document}
