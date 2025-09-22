@@ -1,0 +1,141 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{microtype}
+
+% Page setup
+\geometry{margin=1in}
+
+% Title info
+\title{HW 4 --- PL 2025: Termination}
+\author{Gabriel Giancarlo}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Problem 4.1}
+
+Consider the following algorithm:
+
+\begin{verbatim}
+while b != 0:
+    temp = b
+    b = a mod b
+    a = temp
+return a
+\end{verbatim}
+
+Under certain conditions (which?) this algorithm always terminates.  
+
+Find a measure function and prove termination.
+
+\bigskip
+
+\section*{Problem 4.2}
+
+Consider the following fragment of an implementation of merge sort:
+
+\begin{verbatim}
+function merge_sort(arr, left, right):
+    if left >= right:
+        return
+    mid = (left + right) / 2
+    merge_sort(arr, left, mid)
+    merge_sort(arr, mid+1, right)
+    merge(arr, left, mid, right)
+\end{verbatim}
+
+Prove that
+\[
+    \varphi(left, right) = right - left + 1
+\]
+is a measure function for \texttt{merge\_sort}.
+
+\newpage
+
+\section*{Solution 4.1}
+
+The given algorithm is the \textbf{Euclidean Algorithm} for computing the greatest common divisor (gcd) of two integers.
+
+\subsection*{Conditions for Termination}
+The algorithm requires that $a, b \in \mathbb{N}$ with $b \geq 0$. In particular:
+\begin{itemize}
+    \item $a$ and $b$ must be non-negative integers.
+    \item If $b = 0$, the loop is skipped and the function returns $a$ immediately.
+\end{itemize}
+
+\subsection*{Measure Function}
+We define the measure function
+\[
+    \varphi(a,b) = b.
+\]
+
+\subsection*{Proof of Termination}
+At each iteration:
+\[
+    b \longmapsto a \bmod b,
+\]
+where $0 \leq a \bmod b < b$.
+
+Thus $\varphi(a,b)$ strictly decreases whenever $b \neq 0$, and it always remains a non-negative integer. Since $\mathbb{N}$ is well-founded under $<$, infinite descent is impossible. Therefore the algorithm must terminate.
+
+\bigskip
+
+\section*{Solution 4.2}
+
+We want to show that
+\[
+    \varphi(left, right) = right - left + 1
+\]
+is a measure function for \texttt{merge\_sort}.
+
+\subsection*{Non-negativity}
+For all valid indices with $left \leq right$, we have
+\[
+    \varphi(left, right) = right - left + 1 \geq 1.
+\]
+Thus $\varphi$ always takes positive integer values.
+
+\subsection*{Decrease on Recursive Calls}
+At each recursive step:
+\[
+    mid = \frac{left + right}{2}.
+\]
+The recursive calls are
+\[
+    \texttt{merge\_sort}(arr, left, mid), \qquad \texttt{merge\_sort}(arr, mid+1, right).
+\]
+
+Their measures are:
+\[
+    \varphi(left, mid) = mid - left + 1,
+\]
+\[
+    \varphi(mid+1, right) = right - (mid+1) + 1 = right - mid.
+\]
+
+Since $left \leq mid < right$, both of these values are strictly smaller than
+\[
+    \varphi(left, right) = right - left + 1.
+\]
+
+\subsection*{Termination}
+Each recursive call strictly reduces the measure $\varphi$, which is bounded below by $1$. By well-foundedness of $\mathbb{N}$ under $<$, recursion cannot proceed indefinitely. Therefore the algorithm always terminates.
+
+\bigskip
+
+\section*{Conclusion}
+
+\begin{itemize}
+    \item For the Euclidean algorithm, $\varphi(a,b)=b$ is a valid measure function, and the algorithm terminates for non-negative integer inputs with $b \geq 0$.
+    \item For merge sort, $\varphi(left,right) = right - left + 1$ is a valid measure function, and recursion always terminates because the subproblems are strictly smaller.
+\end{itemize}
+
+\end{document}
