@@ -1,0 +1,72 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{geometry}
+
+\geometry{margin=1in}
+
+\title{Homework 5: Lambda Calculus Workout}
+\author{Gabe Giancarlo}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Workout Problem}
+
+Evaluate the following lambda calculus expression step by step:
+$$(\lambda f.\lambda x.f(f(x))) (\lambda f.\lambda x.(f(f(f x))))$$
+
+\section{Solution}
+
+Let $M = \lambda f.\lambda x.f(f(x))$ and $N = \lambda f.\lambda x.(f(f(f x)))$.
+
+We need to evaluate $M N$.
+
+\begin{align}
+M N &= (\lambda f.\lambda x.f(f(x))) (\lambda f.\lambda x.(f(f(f x)))) \\
+&\rightsquigarrow \lambda x. (\lambda f.\lambda x.(f(f(f x)))) ((\lambda f.\lambda x.(f(f(f x)))) x) \\
+&= \lambda x. (\lambda f.\lambda x.(f(f(f x)))) (f(f(f x))) \\
+&\rightsquigarrow \lambda x. f(f(f(f(f(f x)))))
+\end{align}
+
+\section{Step-by-Step Explanation}
+
+\begin{enumerate}
+    \item \textbf{Initial expression:} $(\lambda f.\lambda x.f(f(x))) (\lambda f.\lambda x.(f(f(f x))))$
+    
+    \item \textbf{First β-reduction:} Apply the function $M = \lambda f.\lambda x.f(f(x))$ to the argument $N = \lambda f.\lambda x.(f(f(f x)))$.
+    
+    This substitutes $N$ for $f$ in $M$:
+    $$\lambda x. N(N(x))$$
+    
+    \item \textbf{Expand $N$:} Replace $N$ with its definition:
+    $$\lambda x. (\lambda f.\lambda x.(f(f(f x)))) ((\lambda f.\lambda x.(f(f(f x)))) x)$$
+    
+    \item \textbf{Second β-reduction:} Apply the inner function to $x$:
+    $$(\lambda f.\lambda x.(f(f(f x)))) x \rightsquigarrow \lambda x.(f(f(f x)))$$
+    
+    But wait, this creates a variable capture issue. Let me be more careful.
+    
+    \item \textbf{Correct approach:} Let's rename variables to avoid capture:
+    $$(\lambda f.\lambda x.(f(f(f x)))) x = (\lambda f.\lambda y.(f(f(f y)))) x \rightsquigarrow \lambda y.(f(f(f y)))$$
+    
+    \item \textbf{Final result:} The expression reduces to:
+    $$\lambda x. f(f(f(f(f(f x)))))$$
+\end{enumerate}
+
+\section{Mathematical Interpretation}
+
+This expression represents the composition of two functions:
+\begin{itemize}
+    \item The first function $M = \lambda f.\lambda x.f(f(x))$ applies its argument twice
+    \item The second function $N = \lambda f.\lambda x.(f(f(f x)))$ applies its argument three times
+    \item When composed, the result applies the argument six times total
+\end{itemize}
+
+This demonstrates the power of lambda calculus to represent complex computations through simple function composition and application, which was Church's original vision for a foundation of mathematics based purely on functions.
+
+\end{document}
