@@ -1,0 +1,65 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{geometry}
+
+\geometry{margin=1in}
+
+\title{Homework 6: Fixed Point Combinator}
+\author{Gabe Giancarlo}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Problem}
+
+Compute $\text{fact } 3$ using the fixed point combinator:
+
+$$\text{let rec fact } = \lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * \text{fact}(n-1) \text{ in fact } 3$$
+
+\section{Solution}
+
+Let $F = \lambda f.\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * f(n-1)$ and $G = \text{fix } F$.
+
+\begin{align}
+&\text{let rec fact } = \lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * \text{fact}(n-1) \text{ in fact } 3 \\
+&\rightsquigarrow \text{let fact } = (\text{fix } F) \text{ in fact } 3 \quad \text{(def of let rec)} \\
+&\rightsquigarrow (\lambda \text{fact}. \text{fact } 3) (\text{fix } F) \quad \text{(def of let)} \\
+&\rightsquigarrow G \ 3 \quad \text{(beta rule)} \\
+&\rightsquigarrow F(\text{fix } F) \ 3 \quad \text{(def of fix)} \\
+&\rightsquigarrow (\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * G(n-1)) \ 3 \quad \text{(beta rule)} \\
+&\rightsquigarrow \text{ if } 3=0 \text{ then } 1 \text{ else } 3 * G(3-1) \quad \text{(beta rule)} \\
+&\rightsquigarrow 3 * G(2) \quad \text{(def of if, arithmetic)} \\
+&\rightsquigarrow 3 * F(\text{fix } F)(2) \quad \text{(def of fix)} \\
+&\rightsquigarrow 3 * (\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * G(n-1)) \ 2 \quad \text{(beta rule)} \\
+&\rightsquigarrow 3 * (\text{ if } 2=0 \text{ then } 1 \text{ else } 2 * G(2-1)) \quad \text{(beta rule)} \\
+&\rightsquigarrow 3 * (2 * G(1)) \quad \text{(def of if, arithmetic)} \\
+&\rightsquigarrow 3 * (2 * F(\text{fix } F)(1)) \quad \text{(def of fix)} \\
+&\rightsquigarrow 3 * (2 * (\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * G(n-1)) \ 1) \quad \text{(beta rule)} \\
+&\rightsquigarrow 3 * (2 * (\text{ if } 1=0 \text{ then } 1 \text{ else } 1 * G(1-1))) \quad \text{(beta rule)} \\
+&\rightsquigarrow 3 * (2 * (1 * G(0))) \quad \text{(def of if, arithmetic)} \\
+&\rightsquigarrow 3 * (2 * (1 * F(\text{fix } F)(0))) \quad \text{(def of fix)} \\
+&\rightsquigarrow 3 * (2 * (1 * (\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * G(n-1)) \ 0)) \quad \text{(beta rule)} \\
+&\rightsquigarrow 3 * (2 * (1 * (\text{ if } 0=0 \text{ then } 1 \text{ else } 0 * G(0-1)))) \quad \text{(beta rule)} \\
+&\rightsquigarrow 3 * (2 * (1 * 1)) \quad \text{(def of if)} \\
+&\rightsquigarrow 6 \quad \text{(arithmetic)}
+\end{align}
+
+\section{Step-by-Step Explanation}
+
+\begin{enumerate}
+    \item \textbf{let rec expansion:} Convert recursive definition to use fixed point combinator
+    \item \textbf{let expansion:} Convert let binding to function application  
+    \item \textbf{fix application:} Apply fixed point combinator to create recursive function
+    \item \textbf{Recursive evaluation:} Function evaluates recursively, expanding $\text{fact}(n)$ to $F(\text{fix } F)(n)$
+    \item \textbf{Base case:} When $n=0$, conditional returns 1, terminating recursion
+    \item \textbf{Arithmetic:} Final result is $3 \times 2 \times 1 \times 1 = 6$
+\end{enumerate}
+
+The fixed point combinator enables recursion in $\lambda$-calculus by providing a way to define self-referential functions.
+
+\end{document}
