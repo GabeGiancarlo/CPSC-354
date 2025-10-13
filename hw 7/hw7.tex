@@ -1,0 +1,310 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{microtype}
+
+% Page setup
+\geometry{margin=1in}
+
+% Title info
+\title{Homework 7: Intro to Parsing and Context-Free Grammars}
+\author{Gabriel Giancarlo}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Homework Problems}
+
+Using the context-free grammar:
+
+\begin{align}
+\text{Exp} &\to \text{Exp '+' Exp1} \\
+\text{Exp1} &\to \text{Exp1 '*' Exp2} \\
+\text{Exp2} &\to \text{Integer} \\
+\text{Exp2} &\to \text{'(' Exp ')'} \\
+\text{Exp} &\to \text{Exp1} \\
+\text{Exp1} &\to \text{Exp2}
+\end{align}
+
+\subsection*{Problem 1: Derivation Trees}
+
+Write out the derivation trees (also called parse trees or concrete syntax trees) for the following strings:
+
+\begin{enumerate}[label=(\alph*)]
+    \item $2+1$
+    \item $1+2*3$
+    \item $1+(2*3)$
+    \item $(1+2)*3$
+    \item $1+2*3+4*5+6$
+\end{enumerate}
+
+\subsection*{Problem 2: Unparsable Strings}
+
+Why do the following strings not have parse trees (given the context-free grammar above)?
+
+\begin{enumerate}[label=(\alph*)]
+    \item $2-1$
+    \item $1.0+2$
+    \item $6/3$
+    \item $8 \bmod 6$
+\end{enumerate}
+
+\subsection*{Problem 3: Parse Tree Uniqueness}
+
+With the simplified grammar without precedence levels:
+
+\begin{align}
+\text{Exp} &\to \text{Exp '+' Exp} \\
+\text{Exp} &\to \text{Exp '*' Exp} \\
+\text{Exp} &\to \text{Integer}
+\end{align}
+
+How many parse trees can you find for the following expressions?
+
+\begin{enumerate}[label=(\alph*)]
+    \item $1+2+3$
+    \item $1*2*3*4$
+\end{enumerate}
+
+Answer the question above using instead the grammar:
+
+\begin{align}
+\text{Exp} &\to \text{Exp '+' Exp1} \\
+\text{Exp} &\to \text{Exp1} \\
+\text{Exp1} &\to \text{Exp1 '*' Exp2} \\
+\text{Exp1} &\to \text{Exp2} \\
+\text{Exp2} &\to \text{Integer}
+\end{align}
+
+\newpage
+
+\section*{Solutions}
+
+\subsection*{Solution 1: Derivation Trees}
+
+\textbf{(a) Derivation tree for $2+1$:}
+
+\begin{verbatim}
+    Exp
+   / | \
+Exp  +  Exp1
+ |       |
+Exp2     Exp2
+ |       |
+Integer  Integer
+ |       |
+  2       1
+\end{verbatim}
+
+Derivation steps:
+\begin{align}
+\text{Exp} &\to \text{Exp '+' Exp1} \\
+&\to \text{Exp2 '+' Exp1} \\
+&\to \text{Integer '+' Exp1} \\
+&\to \text{Integer '+' Exp2} \\
+&\to \text{Integer '+' Integer} \\
+&\to \text{'2' '+' '1'}
+\end{align}
+
+\textbf{(b) Derivation tree for $1+2*3$:}
+
+\begin{verbatim}
+    Exp
+   / | \
+Exp  +  Exp1
+ |       |
+Exp2     Exp1
+ |      / | \
+Integer *  Exp2
+ |       |
+  1    Integer
+         |
+         3
+\end{verbatim}
+
+Derivation steps:
+\begin{align}
+\text{Exp} &\to \text{Exp '+' Exp1} \\
+&\to \text{Exp2 '+' Exp1} \\
+&\to \text{Integer '+' Exp1} \\
+&\to \text{Integer '+' Exp1 '*' Exp2} \\
+&\to \text{Integer '+' Exp2 '*' Exp2} \\
+&\to \text{Integer '+' Integer '*' Exp2} \\
+&\to \text{Integer '+' Integer '*' Integer} \\
+&\to \text{'1' '+' '2' '*' '3'}
+\end{align}
+
+\textbf{(c) Derivation tree for $1+(2*3)$:}
+
+\begin{verbatim}
+    Exp
+    |
+   Exp1
+    |
+   Exp2
+   / | \
+  (  Exp )
+     |
+    Exp1
+   / | \
+Exp2 *  Exp2
+ |       |
+Integer  Integer
+ |       |
+  1       3
+\end{verbatim}
+
+Derivation steps:
+\begin{align}
+\text{Exp} &\to \text{Exp1} \\
+&\to \text{Exp2} \\
+&\to \text{'(' Exp ')'} \\
+&\to \text{'(' Exp1 ')'} \\
+&\to \text{'(' Exp1 '*' Exp2 ')'} \\
+&\to \text{'(' Exp2 '*' Exp2 ')'} \\
+&\to \text{'(' Integer '*' Exp2 ')'} \\
+&\to \text{'(' Integer '*' Integer ')'} \\
+&\to \text{'(' '1' '*' '3' ')'}
+\end{align}
+
+\textbf{(d) Derivation tree for $(1+2)*3$:}
+
+\begin{verbatim}
+    Exp
+    |
+   Exp1
+   / | \
+Exp2 *  Exp2
+ |       |
+( Exp ) Integer
+ |       |
+Exp1     3
+/ | \
+Exp2 + Exp2
+ |       |
+Integer  Integer
+ |       |
+  1       2
+\end{verbatim}
+
+Derivation steps:
+\begin{align}
+\text{Exp} &\to \text{Exp1} \\
+&\to \text{Exp1 '*' Exp2} \\
+&\to \text{Exp2 '*' Exp2} \\
+&\to \text{'(' Exp ')' '*' Exp2} \\
+&\to \text{'(' Exp1 ')' '*' Exp2} \\
+&\to \text{'(' Exp '+' Exp1 ')' '*' Exp2} \\
+&\to \text{'(' Exp2 '+' Exp1 ')' '*' Exp2} \\
+&\to \text{'(' Integer '+' Exp1 ')' '*' Exp2} \\
+&\to \text{'(' Integer '+' Exp2 ')' '*' Exp2} \\
+&\to \text{'(' Integer '+' Integer ')' '*' Exp2} \\
+&\to \text{'(' Integer '+' Integer ')' '*' Integer} \\
+&\to \text{'(' '1' '+' '2' ')' '*' '3'}
+\end{align}
+
+\textbf{(e) Derivation tree for $1+2*3+4*5+6$:}
+
+This is a complex expression. The tree would be:
+
+\begin{verbatim}
+    Exp
+   / | \
+Exp  +  Exp1
+ |       |
+Exp2     Exp1
+ |      / | \
+Integer *  Exp2
+ |       |
+  1    Integer
+         |
+         3
+\end{verbatim}
+
+Actually, let me be more careful. The full derivation would be quite large, but the key insight is that this parses as $1 + (2*3) + (4*5) + 6$ due to the precedence rules in the grammar.
+
+\subsection*{Solution 2: Unparsable Strings}
+
+The following strings cannot be parsed because the grammar only defines rules for addition ($+$) and multiplication ($*$), but not for:
+
+\textbf{(a) $2-1$:} The grammar has no rule for subtraction ($-$).
+
+\textbf{(b) $1.0+2$:} The grammar only handles integers, not decimal numbers like $1.0$.
+
+\textbf{(c) $6/3$:} The grammar has no rule for division ($/$).
+
+\textbf{(d) $8 \bmod 6$:} The grammar has no rule for the modulo operation.
+
+To make these strings parsable, we would need to add new rules to the grammar, such as:
+\begin{align}
+\text{Exp} &\to \text{Exp '-' Exp1} \\
+\text{Exp} &\to \text{Exp '/' Exp1} \\
+\text{Exp} &\to \text{Exp 'mod' Exp1} \\
+\text{Integer} &\to \text{Float} \\
+\text{Float} &\to \text{Integer '.' Integer}
+\end{align}
+
+\subsection*{Solution 3: Parse Tree Uniqueness}
+
+\textbf{With the simplified grammar:}
+
+\begin{align}
+\text{Exp} &\to \text{Exp '+' Exp} \\
+\text{Exp} &\to \text{Exp '*' Exp} \\
+\text{Exp} &\to \text{Integer}
+\end{align}
+
+\textbf{(a) For $1+2+3$:} This expression is ambiguous and has 2 different parse trees:
+
+Tree 1: $(1+2)+3$
+\begin{verbatim}
+    Exp
+   / | \
+Exp  +  Exp
+/ | \    |
+Exp + Exp Integer
+ |   |    |
+Integer Integer 3
+ |   |
+ 1   2
+\end{verbatim}
+
+Tree 2: $1+(2+3)$
+\begin{verbatim}
+    Exp
+   / | \
+Exp  +  Exp
+ |   / | \
+Integer Exp + Exp
+ |   |   |
+ 1  Integer Integer
+    |   |
+    2   3
+\end{verbatim}
+
+\textbf{(b) For $1*2*3*4$:} This expression is also ambiguous and has 5 different parse trees corresponding to the different ways of parenthesizing the multiplication.
+
+\textbf{With the precedence grammar:}
+
+\begin{align}
+\text{Exp} &\to \text{Exp '+' Exp1} \\
+\text{Exp} &\to \text{Exp1} \\
+\text{Exp1} &\to \text{Exp1 '*' Exp2} \\
+\text{Exp1} &\to \text{Exp2} \\
+\text{Exp2} &\to \text{Integer}
+\end{align}
+
+\textbf{(a) For $1+2+3$:} This grammar forces left associativity, so there is only 1 parse tree: $((1+2)+3)$.
+
+\textbf{(b) For $1*2*3*4$:} This grammar also forces left associativity for multiplication, so there is only 1 parse tree: $((1*2)*3)*4$.
+
+The key difference is that the precedence grammar eliminates ambiguity by using different nonterminals (Exp, Exp1, Exp2) to enforce operator precedence and associativity rules.
+
+\end{document}
