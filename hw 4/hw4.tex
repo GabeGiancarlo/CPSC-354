@@ -1,26 +1,74 @@
-\documentclass[12pt]{article}
+\documentclass{article}
 
-% Packages
-\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz} 
+\usetikzlibrary{automata, positioning, arrows} 
+
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage{parskip}
 \usepackage{hyperref}
-\usepackage{enumitem}
-\usepackage{geometry}
-\usepackage{mathtools}
-\usepackage{microtype}
+  \hypersetup{
+    colorlinks = true,
+    urlcolor = blue,       % color of external links using \href
+    linkcolor= blue,       % color of internal links 
+    citecolor= blue,       % color of links to bibliography
+    filecolor= blue,        % color of file links
+    }
+    
+\usepackage{listings}
+\usepackage[utf8]{inputenc}                                                    
+\usepackage[T1]{fontenc}                                                       
 
-% Page setup
-\geometry{margin=1in}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
 
-% Title info
-\title{HW 4 --- PL 2025: Termination}
-\author{Gabriel Giancarlo}
-\date{\today}
+\lstset{frame=tb,
+  language=haskell,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\theoremstyle{plain} 
+   \newtheorem{theorem}{Theorem}[section]
+   \newtheorem{corollary}[theorem]{Corollary}
+   \newtheorem{lemma}[theorem]{Lemma}
+   \newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+   \newtheorem{definition}[theorem]{Definition}
+   \newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}    
+  \newtheorem{remark}[theorem]{Remark}
+
+\title{Termination}
+\author{Gabriel Giancarlo \\ Chapman University}
+
+\date{\today} 
 
 \begin{document}
 
 \maketitle
 
-\section*{Problem 4.1}
+\begin{abstract}
+This assignment explores termination analysis through measure functions. We examine two classic algorithms: the Euclidean algorithm for computing greatest common divisors and merge sort for array sorting. Both examples demonstrate how to construct appropriate measure functions to prove algorithm termination.
+\end{abstract}
+
+\section{Problem 4.1: Euclidean Algorithm}
 
 Consider the following algorithm:
 
@@ -36,9 +84,7 @@ Under certain conditions (which?) this algorithm always terminates.
 
 Find a measure function and prove termination.
 
-\bigskip
-
-\section*{Problem 4.2}
+\section{Problem 4.2: Merge Sort}
 
 Consider the following fragment of an implementation of merge sort:
 
@@ -58,26 +104,24 @@ Prove that
 \]
 is a measure function for \texttt{merge\_sort}.
 
-\newpage
-
-\section*{Solution 4.1}
+\section{Solution 4.1: Euclidean Algorithm}
 
 The given algorithm is the \textbf{Euclidean Algorithm} for computing the greatest common divisor (gcd) of two integers.
 
-\subsection*{Conditions for Termination}
+\subsection{Conditions for Termination}
 The algorithm requires that $a, b \in \mathbb{N}$ with $b \geq 0$. In particular:
 \begin{itemize}
     \item $a$ and $b$ must be non-negative integers.
     \item If $b = 0$, the loop is skipped and the function returns $a$ immediately.
 \end{itemize}
 
-\subsection*{Measure Function}
+\subsection{Measure Function}
 We define the measure function
 \[
     \varphi(a,b) = b.
 \]
 
-\subsection*{Proof of Termination}
+\subsection{Proof of Termination}
 At each iteration:
 \[
     b \longmapsto a \bmod b,
@@ -86,9 +130,7 @@ where $0 \leq a \bmod b < b$.
 
 Thus $\varphi(a,b)$ strictly decreases whenever $b \neq 0$, and it always remains a non-negative integer. Since $\mathbb{N}$ is well-founded under $<$, infinite descent is impossible. Therefore the algorithm must terminate.
 
-\bigskip
-
-\section*{Solution 4.2}
+\section{Solution 4.2: Merge Sort}
 
 We want to show that
 \[
@@ -96,14 +138,14 @@ We want to show that
 \]
 is a measure function for \texttt{merge\_sort}.
 
-\subsection*{Non-negativity}
+\subsection{Non-negativity}
 For all valid indices with $left \leq right$, we have
 \[
     \varphi(left, right) = right - left + 1 \geq 1.
 \]
 Thus $\varphi$ always takes positive integer values.
 
-\subsection*{Decrease on Recursive Calls}
+\subsection{Decrease on Recursive Calls}
 At each recursive step:
 \[
     mid = \frac{left + right}{2}.
@@ -126,12 +168,10 @@ Since $left \leq mid < right$, both of these values are strictly smaller than
     \varphi(left, right) = right - left + 1.
 \]
 
-\subsection*{Termination}
+\subsection{Termination}
 Each recursive call strictly reduces the measure $\varphi$, which is bounded below by $1$. By well-foundedness of $\mathbb{N}$ under $<$, recursion cannot proceed indefinitely. Therefore the algorithm always terminates.
 
-\bigskip
-
-\section*{Conclusion}
+\section{Conclusion}
 
 \begin{itemize}
     \item For the Euclidean algorithm, $\varphi(a,b)=b$ is a valid measure function, and the algorithm terminates for non-negative integer inputs with $b \geq 0$.

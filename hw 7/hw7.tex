@@ -1,26 +1,74 @@
-\documentclass[12pt]{article}
+\documentclass{article}
 
-% Packages
-\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz} 
+\usetikzlibrary{automata, positioning, arrows} 
+
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage{parskip}
 \usepackage{hyperref}
-\usepackage{enumitem}
-\usepackage{geometry}
-\usepackage{mathtools}
-\usepackage{microtype}
+  \hypersetup{
+    colorlinks = true,
+    urlcolor = blue,       % color of external links using \href
+    linkcolor= blue,       % color of internal links 
+    citecolor= blue,       % color of links to bibliography
+    filecolor= blue,        % color of file links
+    }
+    
+\usepackage{listings}
+\usepackage[utf8]{inputenc}                                                    
+\usepackage[T1]{fontenc}                                                       
 
-% Page setup
-\geometry{margin=1in}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
 
-% Title info
-\title{Homework 7: Intro to Parsing and Context-Free Grammars}
-\author{Gabriel Giancarlo}
-\date{\today}
+\lstset{frame=tb,
+  language=haskell,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\theoremstyle{plain} 
+   \newtheorem{theorem}{Theorem}[section]
+   \newtheorem{corollary}[theorem]{Corollary}
+   \newtheorem{lemma}[theorem]{Lemma}
+   \newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+   \newtheorem{definition}[theorem]{Definition}
+   \newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}    
+  \newtheorem{remark}[theorem]{Remark}
+
+\title{Intro to Parsing and Context-Free Grammars}
+\author{Gabriel Giancarlo \\ Chapman University}
+
+\date{\today} 
 
 \begin{document}
 
 \maketitle
 
-\section*{Homework Problems}
+\begin{abstract}
+This assignment introduces parsing theory and context-free grammars. We learn how to construct derivation trees, understand operator precedence, and analyze grammar ambiguity. The exercises demonstrate the relationship between concrete syntax (strings) and abstract syntax (trees) in programming languages.
+\end{abstract}
+
+\section{Homework Problems}
 
 Using the context-free grammar:
 
@@ -33,7 +81,7 @@ Using the context-free grammar:
 \text{Exp1} &\to \text{Exp2}
 \end{align}
 
-\subsection*{Problem 1: Derivation Trees}
+\section{Problem 1: Derivation Trees}
 
 Write out the derivation trees (also called parse trees or concrete syntax trees) for the following strings:
 
@@ -45,7 +93,7 @@ Write out the derivation trees (also called parse trees or concrete syntax trees
     \item $1+2*3+4*5+6$
 \end{enumerate}
 
-\subsection*{Problem 2: Unparsable Strings}
+\section{Problem 2: Unparsable Strings}
 
 Why do the following strings not have parse trees (given the context-free grammar above)?
 
@@ -56,7 +104,7 @@ Why do the following strings not have parse trees (given the context-free gramma
     \item $8 \bmod 6$
 \end{enumerate}
 
-\subsection*{Problem 3: Parse Tree Uniqueness}
+\section{Problem 3: Parse Tree Uniqueness}
 
 With the simplified grammar without precedence levels:
 
@@ -83,11 +131,9 @@ Answer the question above using instead the grammar:
 \text{Exp2} &\to \text{Integer}
 \end{align}
 
-\newpage
+\section{Solutions}
 
-\section*{Solutions}
-
-\subsection*{Solution 1: Derivation Trees}
+\subsection{Solution 1: Derivation Trees}
 
 \textbf{(a) Derivation tree for $2+1$:}
 
@@ -230,7 +276,7 @@ Integer *  Exp2
 
 Actually, let me be more careful. The full derivation would be quite large, but the key insight is that this parses as $1 + (2*3) + (4*5) + 6$ due to the precedence rules in the grammar.
 
-\subsection*{Solution 2: Unparsable Strings}
+\subsection{Solution 2: Unparsable Strings}
 
 The following strings cannot be parsed because the grammar only defines rules for addition ($+$) and multiplication ($*$), but not for:
 
@@ -251,7 +297,7 @@ To make these strings parsable, we would need to add new rules to the grammar, s
 \text{Float} &\to \text{Integer '.' Integer}
 \end{align}
 
-\subsection*{Solution 3: Parse Tree Uniqueness}
+\subsection{Solution 3: Parse Tree Uniqueness}
 
 \textbf{With the simplified grammar:}
 

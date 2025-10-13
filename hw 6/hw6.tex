@@ -1,65 +1,137 @@
-\documentclass[12pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath}
+\documentclass{article}
+
+\usepackage{tikz} 
+\usetikzlibrary{automata, positioning, arrows} 
+
+\usepackage{amsthm}
 \usepackage{amsfonts}
+\usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{geometry}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage{parskip}
+\usepackage{hyperref}
+  \hypersetup{
+    colorlinks = true,
+    urlcolor = blue,       % color of external links using \href
+    linkcolor= blue,       % color of internal links 
+    citecolor= blue,       % color of links to bibliography
+    filecolor= blue,        % color of file links
+    }
+    
+\usepackage{listings}
+\usepackage[utf8]{inputenc}                                                    
+\usepackage[T1]{fontenc}                                                       
 
-\geometry{margin=1in}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
 
-\title{Homework 6: Fixed Point Combinator}
-\author{Gabe Giancarlo}
-\date{\today}
+\lstset{frame=tb,
+  language=haskell,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\theoremstyle{plain} 
+   \newtheorem{theorem}{Theorem}[section]
+   \newtheorem{corollary}[theorem]{Corollary}
+   \newtheorem{lemma}[theorem]{Lemma}
+   \newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+   \newtheorem{definition}[theorem]{Definition}
+   \newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}    
+  \newtheorem{remark}[theorem]{Remark}
+
+\title{Advanced Lambda Calculus}
+\author{Gabriel Giancarlo \\ Chapman University}
+
+\date{\today} 
 
 \begin{document}
 
 \maketitle
 
-\section{Problem}
+\begin{abstract}
+This assignment continues our exploration of lambda calculus with more advanced topics and complex function compositions. We build upon the foundations established in previous assignments to develop deeper understanding of functional programming principles.
+\end{abstract}
 
-Compute $\text{fact } 3$ using the fixed point combinator:
+\section{Advanced Lambda Calculus Exercises}
 
-$$\text{let rec fact } = \lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * \text{fact}(n-1) \text{ in fact } 3$$
+This week's assignment focuses on more complex lambda calculus expressions and their applications to functional programming.
 
-\section{Solution}
+\section{Exercise 1: Church Numerals}
 
-Let $F = \lambda f.\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * f(n-1)$ and $G = \text{fix } F$.
+Define Church numerals and show how to implement basic arithmetic operations.
+
+\subsection{Church Numerals Definition}
+
+Church numerals are a way of representing natural numbers using lambda calculus. The Church numeral $n$ is a function that takes a function $f$ and a value $x$, and applies $f$ to $x$ exactly $n$ times.
 
 \begin{align}
-&\text{let rec fact } = \lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * \text{fact}(n-1) \text{ in fact } 3 \\
-&\rightsquigarrow \text{let fact } = (\text{fix } F) \text{ in fact } 3 \quad \text{(def of let rec)} \\
-&\rightsquigarrow (\lambda \text{fact}. \text{fact } 3) (\text{fix } F) \quad \text{(def of let)} \\
-&\rightsquigarrow G \ 3 \quad \text{(beta rule)} \\
-&\rightsquigarrow F(\text{fix } F) \ 3 \quad \text{(def of fix)} \\
-&\rightsquigarrow (\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * G(n-1)) \ 3 \quad \text{(beta rule)} \\
-&\rightsquigarrow \text{ if } 3=0 \text{ then } 1 \text{ else } 3 * G(3-1) \quad \text{(beta rule)} \\
-&\rightsquigarrow 3 * G(2) \quad \text{(def of if, arithmetic)} \\
-&\rightsquigarrow 3 * F(\text{fix } F)(2) \quad \text{(def of fix)} \\
-&\rightsquigarrow 3 * (\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * G(n-1)) \ 2 \quad \text{(beta rule)} \\
-&\rightsquigarrow 3 * (\text{ if } 2=0 \text{ then } 1 \text{ else } 2 * G(2-1)) \quad \text{(beta rule)} \\
-&\rightsquigarrow 3 * (2 * G(1)) \quad \text{(def of if, arithmetic)} \\
-&\rightsquigarrow 3 * (2 * F(\text{fix } F)(1)) \quad \text{(def of fix)} \\
-&\rightsquigarrow 3 * (2 * (\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * G(n-1)) \ 1) \quad \text{(beta rule)} \\
-&\rightsquigarrow 3 * (2 * (\text{ if } 1=0 \text{ then } 1 \text{ else } 1 * G(1-1))) \quad \text{(beta rule)} \\
-&\rightsquigarrow 3 * (2 * (1 * G(0))) \quad \text{(def of if, arithmetic)} \\
-&\rightsquigarrow 3 * (2 * (1 * F(\text{fix } F)(0))) \quad \text{(def of fix)} \\
-&\rightsquigarrow 3 * (2 * (1 * (\lambda n.\text{ if } n=0 \text{ then } 1 \text{ else } n * G(n-1)) \ 0)) \quad \text{(beta rule)} \\
-&\rightsquigarrow 3 * (2 * (1 * (\text{ if } 0=0 \text{ then } 1 \text{ else } 0 * G(0-1)))) \quad \text{(beta rule)} \\
-&\rightsquigarrow 3 * (2 * (1 * 1)) \quad \text{(def of if)} \\
-&\rightsquigarrow 6 \quad \text{(arithmetic)}
+0 &= \lambda f.\lambda x.x \\
+1 &= \lambda f.\lambda x.f(x) \\
+2 &= \lambda f.\lambda x.f(f(x)) \\
+3 &= \lambda f.\lambda x.f(f(f(x)))
 \end{align}
 
-\section{Step-by-Step Explanation}
+\subsection{Successor Function}
 
-\begin{enumerate}
-    \item \textbf{let rec expansion:} Convert recursive definition to use fixed point combinator
-    \item \textbf{let expansion:} Convert let binding to function application  
-    \item \textbf{fix application:} Apply fixed point combinator to create recursive function
-    \item \textbf{Recursive evaluation:} Function evaluates recursively, expanding $\text{fact}(n)$ to $F(\text{fix } F)(n)$
-    \item \textbf{Base case:} When $n=0$, conditional returns 1, terminating recursion
-    \item \textbf{Arithmetic:} Final result is $3 \times 2 \times 1 \times 1 = 6$
-\end{enumerate}
+The successor function $S$ takes a Church numeral $n$ and returns $n+1$:
 
-The fixed point combinator enables recursion in $\lambda$-calculus by providing a way to define self-referential functions.
+$$S = \lambda n.\lambda f.\lambda x.f(n f x)$$
+
+\subsection{Addition}
+
+Addition of Church numerals can be defined as:
+
+$$+ = \lambda m.\lambda n.\lambda f.\lambda x.m f (n f x)$$
+
+\section{Exercise 2: Boolean Operations}
+
+Define Church booleans and show how to implement logical operations.
+
+\subsection{Church Booleans}
+
+\begin{align}
+\text{true} &= \lambda x.\lambda y.x \\
+\text{false} &= \lambda x.\lambda y.y
+\end{align}
+
+\subsection{Logical Operations}
+
+\begin{align}
+\text{and} &= \lambda p.\lambda q.p q p \\
+\text{or} &= \lambda p.\lambda q.p p q \\
+\text{not} &= \lambda p.\lambda x.\lambda y.p y x
+\end{align}
+
+\section{Exercise 3: Recursion and Fixed Points}
+
+The Y combinator allows us to define recursive functions in lambda calculus:
+
+$$Y = \lambda f.(\lambda x.f(x x))(\lambda x.f(x x))$$
+
+\subsection{Example: Factorial}
+
+We can define factorial using the Y combinator:
+
+$$\text{factorial} = Y(\lambda f.\lambda n.\text{if } (n = 0) \text{ then } 1 \text{ else } n \times f(n-1))$$
+
+\section{Conclusion}
+
+These advanced lambda calculus concepts demonstrate the power and expressiveness of functional programming. The ability to represent numbers, booleans, and recursion purely through function application shows how lambda calculus can serve as a foundation for computation.
 
 \end{document}
