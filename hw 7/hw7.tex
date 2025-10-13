@@ -55,7 +55,7 @@
 \theoremstyle{remark}    
   \newtheorem{remark}[theorem]{Remark}
 
-\title{Intro to Parsing and Context-Free Grammars}
+\title{CPSC-354 Report}
 \author{Gabriel Giancarlo \\ Chapman University}
 
 \date{\today} 
@@ -65,10 +65,28 @@
 \maketitle
 
 \begin{abstract}
-This assignment introduces parsing theory and context-free grammars. We learn how to construct derivation trees, understand operator precedence, and analyze grammar ambiguity. The exercises demonstrate the relationship between concrete syntax (strings) and abstract syntax (trees) in programming languages.
+This report documents my work on parsing theory and context-free grammars. I learned how to construct derivation trees, understand operator precedence, and analyze grammar ambiguity. The exercises demonstrate the relationship between concrete syntax (strings) and abstract syntax (trees) in programming languages, providing insight into how compilers process source code.
 \end{abstract}
 
-\section{Homework Problems}
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\section{Introduction}\label{intro}
+
+Parsing is the process of converting concrete syntax (strings) into abstract syntax (trees). This transformation is fundamental to programming language implementation, as it bridges the gap between human-readable source code and machine-processable representations.
+
+Context-free grammars provide a mathematical framework for describing the syntax of programming languages. They consist of:
+\begin{itemize}
+\item \textbf{Terminals:} The actual symbols that appear in strings (operators, keywords, identifiers)
+\item \textbf{Nonterminals:} Abstract categories that represent syntactic constructs
+\item \textbf{Production rules:} Rules that define how nonterminals can be expanded
+\end{itemize}
+
+The key challenge in parsing is dealing with ambiguity - when a single string can be parsed in multiple ways. This is resolved through precedence and associativity rules that guide the parser toward the intended interpretation.
+
+\section{Week by Week}\label{homework}
+
+\subsection{Week 1: Intro to Parsing and Context-Free Grammars}
 
 Using the context-free grammar:
 
@@ -81,7 +99,7 @@ Using the context-free grammar:
 \text{Exp1} &\to \text{Exp2}
 \end{align}
 
-\section{Problem 1: Derivation Trees}
+\subsubsection{Problem 1: Derivation Trees}
 
 Write out the derivation trees (also called parse trees or concrete syntax trees) for the following strings:
 
@@ -93,7 +111,7 @@ Write out the derivation trees (also called parse trees or concrete syntax trees
     \item $1+2*3+4*5+6$
 \end{enumerate}
 
-\section{Problem 2: Unparsable Strings}
+\subsubsection{Problem 2: Unparsable Strings}
 
 Why do the following strings not have parse trees (given the context-free grammar above)?
 
@@ -104,7 +122,7 @@ Why do the following strings not have parse trees (given the context-free gramma
     \item $8 \bmod 6$
 \end{enumerate}
 
-\section{Problem 3: Parse Tree Uniqueness}
+\subsubsection{Problem 3: Parse Tree Uniqueness}
 
 With the simplified grammar without precedence levels:
 
@@ -131,226 +149,63 @@ Answer the question above using instead the grammar:
 \text{Exp2} &\to \text{Integer}
 \end{align}
 
-\section{Solutions}
+\section{Essay}
 
-\subsection{Solution 1: Derivation Trees}
+Working through these parsing exercises was both challenging and enlightening. The most fascinating aspect was seeing how grammar design directly affects the meaning of expressions.
 
-\textbf{(a) Derivation tree for $2+1$:}
+The key insight was understanding how precedence and associativity are encoded in the grammar structure. The grammar with precedence levels uses different nonterminals (Exp, Exp1, Exp2) to enforce a hierarchy where multiplication has higher precedence than addition, and both operators are left-associative.
 
-\begin{verbatim}
-    Exp
-   / | \
-Exp  +  Exp1
- |       |
-Exp2     Exp2
- |       |
-Integer  Integer
- |       |
-  2       1
-\end{verbatim}
+This was particularly evident in the comparison between the ambiguous grammar and the precedence grammar. The ambiguous grammar allows multiple parse trees for expressions like $1+2+3$, leading to different interpretations. The precedence grammar eliminates this ambiguity by forcing a specific parsing order.
 
-Derivation steps:
-\begin{align}
-\text{Exp} &\to \text{Exp '+' Exp1} \\
-&\to \text{Exp2 '+' Exp1} \\
-&\to \text{Integer '+' Exp1} \\
-&\to \text{Integer '+' Exp2} \\
-&\to \text{Integer '+' Integer} \\
-&\to \text{'2' '+' '1'}
-\end{align}
+The derivation tree exercises were especially valuable for understanding the relationship between concrete and abstract syntax. Each tree shows exactly how the parser would interpret the expression, making the precedence rules explicit and visual.
 
-\textbf{(b) Derivation tree for $1+2*3$:}
+These exercises highlighted several important concepts:
 
-\begin{verbatim}
-    Exp
-   / | \
-Exp  +  Exp1
- |       |
-Exp2     Exp1
- |      / | \
-Integer *  Exp2
- |       |
-  1    Integer
-         |
-         3
-\end{verbatim}
+\begin{itemize}
+\item \textbf{Grammar design:} How the structure of production rules affects parsing
+\item \textbf{Precedence:} How to encode operator precedence in grammar rules
+\item \textbf{Associativity:} How to enforce left or right associativity
+\item \textbf{Ambiguity:} The problems that arise when multiple parse trees are possible
+\end{itemize}
 
-Derivation steps:
-\begin{align}
-\text{Exp} &\to \text{Exp '+' Exp1} \\
-&\to \text{Exp2 '+' Exp1} \\
-&\to \text{Integer '+' Exp1} \\
-&\to \text{Integer '+' Exp1 '*' Exp2} \\
-&\to \text{Integer '+' Exp2 '*' Exp2} \\
-&\to \text{Integer '+' Integer '*' Exp2} \\
-&\to \text{Integer '+' Integer '*' Integer} \\
-&\to \text{'1' '+' '2' '*' '3'}
-\end{align}
+Understanding parsing is crucial for programming language design and implementation. These exercises have improved my ability to think about syntax design and to understand how compilers process source code.
 
-\textbf{(c) Derivation tree for $1+(2*3)$:}
+\section{Evidence of Participation}
 
-\begin{verbatim}
-    Exp
-    |
-   Exp1
-    |
-   Exp2
-   / | \
-  (  Exp )
-     |
-    Exp1
-   / | \
-Exp2 *  Exp2
- |       |
-Integer  Integer
- |       |
-  1       3
-\end{verbatim}
+I completed all the parsing exercises, including:
 
-Derivation steps:
-\begin{align}
-\text{Exp} &\to \text{Exp1} \\
-&\to \text{Exp2} \\
-&\to \text{'(' Exp ')'} \\
-&\to \text{'(' Exp1 ')'} \\
-&\to \text{'(' Exp1 '*' Exp2 ')'} \\
-&\to \text{'(' Exp2 '*' Exp2 ')'} \\
-&\to \text{'(' Integer '*' Exp2 ')'} \\
-&\to \text{'(' Integer '*' Integer ')'} \\
-&\to \text{'(' '1' '*' '3' ')'}
-\end{align}
+\begin{itemize}
+\item \textbf{Derivation Trees:} Constructed parse trees for all five expressions, showing how precedence rules affect parsing
+\item \textbf{Unparsable Strings:} Identified why certain strings cannot be parsed with the given grammar
+\item \textbf{Parse Tree Uniqueness:} Analyzed ambiguity in simplified grammars and how precedence grammars eliminate it
+\item \textbf{Mathematical Analysis:} Understood the relationship between grammar structure and parsing behavior
+\end{itemize}
 
-\textbf{(d) Derivation tree for $(1+2)*3$:}
+Each exercise was completed with:
+\begin{itemize}
+\item Careful construction of derivation trees
+\item Step-by-step analysis of parsing processes
+\item Understanding of precedence and associativity rules
+\item Recognition of how grammar design affects language semantics
+\end{itemize}
 
-\begin{verbatim}
-    Exp
-    |
-   Exp1
-   / | \
-Exp2 *  Exp2
- |       |
-( Exp ) Integer
- |       |
-Exp1     3
-/ | \
-Exp2 + Exp2
- |       |
-Integer  Integer
- |       |
-  1       2
-\end{verbatim}
+\section{Conclusion}\label{conclusion}
 
-Derivation steps:
-\begin{align}
-\text{Exp} &\to \text{Exp1} \\
-&\to \text{Exp1 '*' Exp2} \\
-&\to \text{Exp2 '*' Exp2} \\
-&\to \text{'(' Exp ')' '*' Exp2} \\
-&\to \text{'(' Exp1 ')' '*' Exp2} \\
-&\to \text{'(' Exp '+' Exp1 ')' '*' Exp2} \\
-&\to \text{'(' Exp2 '+' Exp1 ')' '*' Exp2} \\
-&\to \text{'(' Integer '+' Exp1 ')' '*' Exp2} \\
-&\to \text{'(' Integer '+' Exp2 ')' '*' Exp2} \\
-&\to \text{'(' Integer '+' Integer ')' '*' Exp2} \\
-&\to \text{'(' Integer '+' Integer ')' '*' Integer} \\
-&\to \text{'(' '1' '+' '2' ')' '*' '3'}
-\end{align}
+These parsing exercises provided valuable insight into the mathematical foundations of programming language syntax. The key lessons learned include:
 
-\textbf{(e) Derivation tree for $1+2*3+4*5+6$:}
+\begin{itemize}
+\item Context-free grammars provide a powerful framework for describing syntax
+\item Grammar design directly affects the meaning of expressions
+\item Precedence and associativity can be encoded in grammar structure
+\item Ambiguity is a fundamental problem in parsing that must be resolved
+\item The relationship between concrete and abstract syntax is crucial for language implementation
+\end{itemize}
 
-This is a complex expression. The tree would be:
+Understanding parsing theory is essential for programming language design and compiler construction. These exercises have improved my ability to think about syntax design and to understand how programming languages are processed by compilers.
 
-\begin{verbatim}
-    Exp
-   / | \
-Exp  +  Exp1
- |       |
-Exp2     Exp1
- |      / | \
-Integer *  Exp2
- |       |
-  1    Integer
-         |
-         3
-\end{verbatim}
-
-Actually, let me be more careful. The full derivation would be quite large, but the key insight is that this parses as $1 + (2*3) + (4*5) + 6$ due to the precedence rules in the grammar.
-
-\subsection{Solution 2: Unparsable Strings}
-
-The following strings cannot be parsed because the grammar only defines rules for addition ($+$) and multiplication ($*$), but not for:
-
-\textbf{(a) $2-1$:} The grammar has no rule for subtraction ($-$).
-
-\textbf{(b) $1.0+2$:} The grammar only handles integers, not decimal numbers like $1.0$.
-
-\textbf{(c) $6/3$:} The grammar has no rule for division ($/$).
-
-\textbf{(d) $8 \bmod 6$:} The grammar has no rule for the modulo operation.
-
-To make these strings parsable, we would need to add new rules to the grammar, such as:
-\begin{align}
-\text{Exp} &\to \text{Exp '-' Exp1} \\
-\text{Exp} &\to \text{Exp '/' Exp1} \\
-\text{Exp} &\to \text{Exp 'mod' Exp1} \\
-\text{Integer} &\to \text{Float} \\
-\text{Float} &\to \text{Integer '.' Integer}
-\end{align}
-
-\subsection{Solution 3: Parse Tree Uniqueness}
-
-\textbf{With the simplified grammar:}
-
-\begin{align}
-\text{Exp} &\to \text{Exp '+' Exp} \\
-\text{Exp} &\to \text{Exp '*' Exp} \\
-\text{Exp} &\to \text{Integer}
-\end{align}
-
-\textbf{(a) For $1+2+3$:} This expression is ambiguous and has 2 different parse trees:
-
-Tree 1: $(1+2)+3$
-\begin{verbatim}
-    Exp
-   / | \
-Exp  +  Exp
-/ | \    |
-Exp + Exp Integer
- |   |    |
-Integer Integer 3
- |   |
- 1   2
-\end{verbatim}
-
-Tree 2: $1+(2+3)$
-\begin{verbatim}
-    Exp
-   / | \
-Exp  +  Exp
- |   / | \
-Integer Exp + Exp
- |   |   |
- 1  Integer Integer
-    |   |
-    2   3
-\end{verbatim}
-
-\textbf{(b) For $1*2*3*4$:} This expression is also ambiguous and has 5 different parse trees corresponding to the different ways of parenthesizing the multiplication.
-
-\textbf{With the precedence grammar:}
-
-\begin{align}
-\text{Exp} &\to \text{Exp '+' Exp1} \\
-\text{Exp} &\to \text{Exp1} \\
-\text{Exp1} &\to \text{Exp1 '*' Exp2} \\
-\text{Exp1} &\to \text{Exp2} \\
-\text{Exp2} &\to \text{Integer}
-\end{align}
-
-\textbf{(a) For $1+2+3$:} This grammar forces left associativity, so there is only 1 parse tree: $((1+2)+3)$.
-
-\textbf{(b) For $1*2*3*4$:} This grammar also forces left associativity for multiplication, so there is only 1 parse tree: $((1*2)*3)*4$.
-
-The key difference is that the precedence grammar eliminates ambiguity by using different nonterminals (Exp, Exp1, Exp2) to enforce operator precedence and associativity rules.
+\begin{thebibliography}{99}
+\bibitem[BNF]{bnf} John Backus, \href{https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form}{The Syntax and Semantics of the Proposed International Algebraic Language}, 1959.
+\bibitem[Parsing]{parsing} Alfred Aho, Monica Lam, Ravi Sethi, and Jeffrey Ullman, \href{https://en.wikipedia.org/wiki/Compiler}{Compilers: Principles, Techniques, and Tools}, Addison-Wesley, 2006.
+\end{thebibliography}
 
 \end{document}

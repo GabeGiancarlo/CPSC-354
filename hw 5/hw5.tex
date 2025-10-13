@@ -55,7 +55,7 @@
 \theoremstyle{remark}    
   \newtheorem{remark}[theorem]{Remark}
 
-\title{Lambda Calculus Workout}
+\title{CPSC-354 Report}
 \author{Gabriel Giancarlo \\ Chapman University}
 
 \date{\today} 
@@ -65,15 +65,33 @@
 \maketitle
 
 \begin{abstract}
-This assignment provides practice with lambda calculus through function composition and beta-reduction exercises. We work through complex lambda expressions to develop fluency with the fundamental operations of functional programming.
+This report documents my work on lambda calculus through function composition and beta-reduction exercises. I worked through complex lambda expressions to develop fluency with the fundamental operations of functional programming and understand how lambda calculus can represent computation through function application and abstraction.
 \end{abstract}
 
-\section{Workout Problem}
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\section{Introduction}\label{intro}
+
+Lambda calculus, introduced by Alonzo Church in the 1930s, provides a mathematical foundation for functional programming. It is based on the simple notions of function definition and function application. Despite its minimal syntax, lambda calculus is Turing-complete and can express any computable function.
+
+The key operations in lambda calculus are:
+\begin{itemize}
+\item \textbf{Abstraction:} $\lambda x.M$ creates a function with parameter $x$ and body $M$
+\item \textbf{Application:} $M N$ applies function $M$ to argument $N$
+\item \textbf{Beta-reduction:} $(\lambda x.M) N \to M[x := N]$ substitutes $N$ for $x$ in $M$
+\end{itemize}
+
+\section{Week by Week}\label{homework}
+
+\subsection{Week 1: Lambda Calculus Workout}
+
+\subsubsection{Workout Problem}
 
 Evaluate the following lambda calculus expression step by step:
 $$(\lambda f.\lambda x.f(f(x))) (\lambda f.\lambda x.(f(f(f x))))$$
 
-\section{Solution}
+\subsubsection{Solution}
 
 Let $M = \lambda f.\lambda x.f(f(x))$ and $N = \lambda f.\lambda x.(f(f(f x)))$.
 
@@ -86,7 +104,7 @@ M N &= (\lambda f.\lambda x.f(f(x))) (\lambda f.\lambda x.(f(f(f x)))) \\
 &\rightsquigarrow \lambda x. f(f(f(f(f(f x)))))
 \end{align}
 
-\section{Step-by-Step Explanation}
+\subsubsection{Step-by-Step Explanation}
 
 \begin{enumerate}
     \item \textbf{Initial expression:} $(\lambda f.\lambda x.f(f(x))) (\lambda f.\lambda x.(f(f(f x))))$
@@ -111,15 +129,59 @@ M N &= (\lambda f.\lambda x.f(f(x))) (\lambda f.\lambda x.(f(f(f x)))) \\
     $$\lambda x. f(f(f(f(f(f x)))))$$
 \end{enumerate}
 
-\section{Mathematical Interpretation}
+\section{Essay}
 
-This expression represents the composition of two functions:
+Working through this lambda calculus exercise was both challenging and enlightening. The most fascinating aspect was seeing how function composition works at such a fundamental level.
+
+The key insight was understanding that $M = \lambda f.\lambda x.f(f(x))$ represents a function that applies its argument twice, while $N = \lambda f.\lambda x.(f(f(f x)))$ applies its argument three times. When we compose them, we get a function that applies its argument six times total.
+
+This exercise highlighted several important concepts:
+
 \begin{itemize}
-    \item The first function $M = \lambda f.\lambda x.f(f(x))$ applies its argument twice
-    \item The second function $N = \lambda f.\lambda x.(f(f(f x)))$ applies its argument three times
-    \item When composed, the result applies the argument six times total
+\item \textbf{Function composition:} How to combine functions in lambda calculus
+\item \textbf{Beta-reduction:} The process of applying functions to arguments
+\item \textbf{Variable capture:} The importance of being careful about variable names
+\item \textbf{Substitution:} How to properly substitute expressions
 \end{itemize}
 
-This demonstrates the power of lambda calculus to represent complex computations through simple function composition and application, which was Church's original vision for a foundation of mathematics based purely on functions.
+The mathematical interpretation was particularly satisfying. This expression represents the composition of two functions, and the result applies the argument six times total. This demonstrates the power of lambda calculus to represent complex computations through simple function composition and application, which was Church's original vision for a foundation of mathematics based purely on functions.
+
+\section{Evidence of Participation}
+
+I completed the lambda calculus workout exercise, including:
+
+\begin{itemize}
+\item Careful step-by-step evaluation of the complex lambda expression
+\item Proper handling of beta-reduction and function application
+\item Attention to variable capture issues and renaming
+\item Mathematical interpretation of the final result
+\item Understanding of function composition in lambda calculus
+\end{itemize}
+
+The solution demonstrates:
+\begin{itemize}
+\item Understanding of lambda calculus syntax and semantics
+\item Ability to perform beta-reduction correctly
+\item Awareness of variable capture and how to avoid it
+\item Mathematical reasoning about function composition
+\end{itemize}
+
+\section{Conclusion}\label{conclusion}
+
+This lambda calculus exercise provided valuable insight into the mathematical foundations of functional programming. The key lessons learned include:
+
+\begin{itemize}
+\item Lambda calculus provides a minimal but powerful foundation for computation
+\item Function composition is a fundamental operation that can be expressed elegantly
+\item Careful attention to variable names is crucial for correct reduction
+\item Mathematical reasoning helps understand the meaning of complex expressions
+\end{itemize}
+
+Understanding lambda calculus is essential for functional programming. These exercises have improved my ability to think about computation in terms of functions and to understand the theoretical foundations of programming languages.
+
+\begin{thebibliography}{99}
+\bibitem[Church]{church} Alonzo Church, \href{https://en.wikipedia.org/wiki/Lambda_calculus}{The Calculi of Lambda-Conversion}, Princeton University Press, 1941.
+\bibitem[Lambda]{lambda} Henk Barendregt, \href{https://en.wikipedia.org/wiki/Lambda_calculus}{The Lambda Calculus: Its Syntax and Semantics}, North-Holland, 1984.
+\end{thebibliography}
 
 \end{document}

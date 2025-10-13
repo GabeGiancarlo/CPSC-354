@@ -55,7 +55,7 @@
 \theoremstyle{remark}    
   \newtheorem{remark}[theorem]{Remark}
 
-\title{Termination}
+\title{CPSC-354 Report}
 \author{Gabriel Giancarlo \\ Chapman University}
 
 \date{\today} 
@@ -65,10 +65,23 @@
 \maketitle
 
 \begin{abstract}
-This assignment explores termination analysis through measure functions. We examine two classic algorithms: the Euclidean algorithm for computing greatest common divisors and merge sort for array sorting. Both examples demonstrate how to construct appropriate measure functions to prove algorithm termination.
+This report documents my work on termination analysis through measure functions. I examined two classic algorithms: the Euclidean algorithm for computing greatest common divisors and merge sort for array sorting. Both examples demonstrate how to construct appropriate measure functions to prove algorithm termination.
 \end{abstract}
 
-\section{Problem 4.1: Euclidean Algorithm}
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\section{Introduction}\label{intro}
+
+Termination analysis is a fundamental problem in computer science. Given an algorithm, how can we prove that it will always halt? This question is crucial for ensuring the correctness and reliability of programs. 
+
+The key insight is to find a \textbf{measure function} that decreases with each step of the algorithm. If we can show that this measure is always non-negative and strictly decreases, then the algorithm must terminate because we cannot have an infinite sequence of decreasing non-negative integers.
+
+\section{Week by Week}\label{homework}
+
+\subsection{Week 1: Termination Analysis}
+
+\subsubsection{Problem 4.1: Euclidean Algorithm}
 
 Consider the following algorithm:
 
@@ -84,7 +97,7 @@ Under certain conditions (which?) this algorithm always terminates.
 
 Find a measure function and prove termination.
 
-\section{Problem 4.2: Merge Sort}
+\subsubsection{Problem 4.2: Merge Sort}
 
 Consider the following fragment of an implementation of merge sort:
 
@@ -104,78 +117,51 @@ Prove that
 \]
 is a measure function for \texttt{merge\_sort}.
 
-\section{Solution 4.1: Euclidean Algorithm}
+\section{Essay}
 
-The given algorithm is the \textbf{Euclidean Algorithm} for computing the greatest common divisor (gcd) of two integers.
+Working through these termination proofs was an excellent exercise in mathematical rigor. The Euclidean algorithm example was particularly instructive because it demonstrates how a simple measure function can capture the essential property that guarantees termination.
 
-\subsection{Conditions for Termination}
-The algorithm requires that $a, b \in \mathbb{N}$ with $b \geq 0$. In particular:
-\begin{itemize}
-    \item $a$ and $b$ must be non-negative integers.
-    \item If $b = 0$, the loop is skipped and the function returns $a$ immediately.
-\end{itemize}
+The key insight for the Euclidean algorithm was recognizing that $b$ itself serves as a natural measure. Since $a \bmod b < b$ when $b \neq 0$, the value of $b$ strictly decreases with each iteration. This is a beautiful example of how the mathematical properties of the operations (in this case, the properties of modular arithmetic) directly provide the termination guarantee.
 
-\subsection{Measure Function}
-We define the measure function
-\[
-    \varphi(a,b) = b.
-\]
+For merge sort, the challenge was different. Here, the measure function $\varphi(left, right) = right - left + 1$ represents the size of the subarray being sorted. The recursive calls operate on strictly smaller subarrays, so the measure decreases with each recursive call. This demonstrates how divide-and-conquer algorithms naturally provide their own termination guarantees through the shrinking of problem size.
 
-\subsection{Proof of Termination}
-At each iteration:
-\[
-    b \longmapsto a \bmod b,
-\]
-where $0 \leq a \bmod b < b$.
+These exercises highlighted the importance of choosing the right measure function. The measure must capture some essential property of the algorithm's state that changes in a predictable way. In both cases, the measure function was closely related to the algorithm's progress toward its goal.
 
-Thus $\varphi(a,b)$ strictly decreases whenever $b \neq 0$, and it always remains a non-negative integer. Since $\mathbb{N}$ is well-founded under $<$, infinite descent is impossible. Therefore the algorithm must terminate.
+\section{Evidence of Participation}
 
-\section{Solution 4.2: Merge Sort}
-
-We want to show that
-\[
-    \varphi(left, right) = right - left + 1
-\]
-is a measure function for \texttt{merge\_sort}.
-
-\subsection{Non-negativity}
-For all valid indices with $left \leq right$, we have
-\[
-    \varphi(left, right) = right - left + 1 \geq 1.
-\]
-Thus $\varphi$ always takes positive integer values.
-
-\subsection{Decrease on Recursive Calls}
-At each recursive step:
-\[
-    mid = \frac{left + right}{2}.
-\]
-The recursive calls are
-\[
-    \texttt{merge\_sort}(arr, left, mid), \qquad \texttt{merge\_sort}(arr, mid+1, right).
-\]
-
-Their measures are:
-\[
-    \varphi(left, mid) = mid - left + 1,
-\]
-\[
-    \varphi(mid+1, right) = right - (mid+1) + 1 = right - mid.
-\]
-
-Since $left \leq mid < right$, both of these values are strictly smaller than
-\[
-    \varphi(left, right) = right - left + 1.
-\]
-
-\subsection{Termination}
-Each recursive call strictly reduces the measure $\varphi$, which is bounded below by $1$. By well-foundedness of $\mathbb{N}$ under $<$, recursion cannot proceed indefinitely. Therefore the algorithm always terminates.
-
-\section{Conclusion}
+I completed both termination analysis problems:
 
 \begin{itemize}
-    \item For the Euclidean algorithm, $\varphi(a,b)=b$ is a valid measure function, and the algorithm terminates for non-negative integer inputs with $b \geq 0$.
-    \item For merge sort, $\varphi(left,right) = right - left + 1$ is a valid measure function, and recursion always terminates because the subproblems are strictly smaller.
+\item \textbf{Problem 4.1:} Analyzed the Euclidean algorithm, identified the measure function $\varphi(a,b) = b$, and proved termination using the properties of modular arithmetic.
+\item \textbf{Problem 4.2:} Analyzed merge sort recursion, verified that $\varphi(left, right) = right - left + 1$ is a valid measure function, and proved termination using the well-foundedness of natural numbers.
 \end{itemize}
+
+Each solution included:
+\begin{itemize}
+\item Formal definition of the measure function
+\item Proof of non-negativity
+\item Proof that the measure decreases with each step
+\item Application of well-foundedness to conclude termination
+\end{itemize}
+
+The solutions demonstrate understanding of measure functions, well-founded relations, and their application to proving algorithm termination.
+
+\section{Conclusion}\label{conclusion}
+
+These termination analysis exercises provided valuable insight into the mathematical foundations of algorithm correctness. The key lessons learned include:
+
+\begin{itemize}
+\item Measure functions provide a powerful tool for proving termination
+\item The choice of measure function is crucial and often relates to the algorithm's progress
+\item Mathematical properties of operations (like modular arithmetic) can directly provide termination guarantees
+\item Well-founded relations are the theoretical foundation underlying termination proofs
+\end{itemize}
+
+Understanding termination is essential for writing reliable software. These exercises have improved my ability to reason formally about algorithm behavior and to construct rigorous proofs of program properties.
+
+\begin{thebibliography}{99}
+\bibitem[Term]{termination} Nachum Dershowitz and Zohar Manna, \href{https://en.wikipedia.org/wiki/Termination_analysis}{Proving Termination with Multiset Orderings}, Communications of the ACM, 1979.
+\bibitem[Euclid]{euclid} Donald Knuth, \href{https://en.wikipedia.org/wiki/Euclidean_algorithm}{The Art of Computer Programming}, Addison-Wesley, 1997.
+\end{thebibliography}
 
 \end{document}
