@@ -1,77 +1,145 @@
-\documentclass[12pt]{article}
+\documentclass{article}
 
-% Packages
-\usepackage{amsmath}   % for math environments
-\usepackage{amssymb}   % for symbols
-\usepackage{amsfonts}  % for fonts
-\usepackage{hyperref}  % clickable references
+\usepackage{tikz} 
+\usetikzlibrary{automata, positioning, arrows} 
+
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage{parskip}
+\usepackage{hyperref}
+  \hypersetup{
+    colorlinks = true,
+    urlcolor = blue,       % color of external links using \href
+    linkcolor= blue,       % color of internal links 
+    citecolor= blue,       % color of links to bibliography
+    filecolor= blue,        % color of file links
+    }
+    
+\usepackage{listings}
+\usepackage[utf8]{inputenc}                                                    
+\usepackage[T1]{fontenc}                                                       
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=haskell,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\theoremstyle{plain} 
+   \newtheorem{theorem}{Theorem}[section]
+   \newtheorem{corollary}[theorem]{Corollary}
+   \newtheorem{lemma}[theorem]{Lemma}
+   \newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+   \newtheorem{definition}[theorem]{Definition}
+   \newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}    
+  \newtheorem{remark}[theorem]{Remark}
+
+\title{CPSC-354 Report}
+\author{Gabriel Giancarlo \\ Chapman University}
+
+\date{\today} 
 
 \begin{document}
 
-\section{Homework 1: The MU Puzzle}
+\maketitle
 
-\subsection{Problem Statement}
-The MU puzzle, introduced in Douglas Hofstadter's book \textit{Gödel, Escher, Bach}, begins with the string
-\[
-MI
-\]
-and asks whether it is possible to transform this string into
-\[
-MU
-\]
-using a set of formal rules. The puzzle is an example of a formal system, also called a Post production system, where strings are transformed according to syntactic rules without reference to meaning.
+\begin{abstract}
+This report documents my work throughout CPSC-354 Programming Languages course, covering various topics from formal systems and string rewriting to lambda calculus and parsing. Each week's homework assignments are presented with detailed solutions and reflections on the learning process.
+\end{abstract}
 
-The rules of the system are:
+\setcounter{tocdepth}{3}
+\tableofcontents
 
-\begin{enumerate}
-    \item If a string ends with \texttt{I}, you may add a \texttt{U} at the end. \\
-          Example: $MI \Rightarrow MIU$
-    \item If you have a string of the form $M x$, then you may append $x$ to the end. \\
-          Example: $MI \Rightarrow MII$
-    \item In any string, you may replace \texttt{III} with a single \texttt{U}. \\
-          Example: $MIIII \Rightarrow MIU$
-    \item In any string, you may drop a \texttt{UU}. \\
-          Example: $MUUU \Rightarrow MU$
-\end{enumerate}
+\section{Introduction}\label{intro}
 
-The central question is: \textbf{Can $MI$ ever be transformed into $MU$ using these rules?}
+This course has provided a comprehensive introduction to the theoretical foundations of programming languages, covering topics from formal systems and string rewriting to lambda calculus and context-free grammars. Through weekly homework assignments, I have gained hands-on experience with mathematical approaches to understanding computation and language design.
 
-\subsection{Attempted Solution}
-We begin with $MI$ and attempt to generate $MU$:
+\section{Week by Week}\label{homework}
 
+\subsection{Week 1: The MU Puzzle}
+
+The first assignment introduced formal systems through Douglas Hofstadter's MU puzzle. This exercise demonstrated how seemingly simple string transformation rules can lead to complex mathematical properties, particularly the importance of invariants in proving impossibility results.
+
+\subsection{Week 2: String Rewriting Systems}
+
+Week 2 focused on abstract reduction systems (ARS) and their properties. Through various string rewriting exercises, I learned about termination, confluence, and the use of invariants to characterize equivalence classes.
+
+\subsection{Week 3: Termination}
+
+This week introduced measure functions and their role in proving algorithm termination. I worked with examples including the Euclidean algorithm and merge sort, learning how to construct appropriate measure functions.
+
+\subsection{Week 4: Lambda Calculus}
+
+Week 4 covered the foundations of functional programming through lambda calculus. I practiced beta-reduction and learned how lambda calculus can represent computation through function application and abstraction.
+
+\subsection{Week 5: Lambda Calculus Workout}
+
+Building on the previous week, this assignment provided more complex lambda calculus exercises, helping me develop fluency with function composition and reduction strategies.
+
+\subsection{Week 6: Advanced Topics}
+
+Week 6 continued with more advanced lambda calculus concepts and their applications to functional programming.
+
+\subsection{Week 7: Intro to Parsing and Context-Free Grammars}
+
+The most recent assignment introduced parsing theory and context-free grammars. I learned how to construct derivation trees, understand operator precedence, and analyze grammar ambiguity.
+
+\section{Essay}
+
+Throughout this course, I have gained a deeper appreciation for the mathematical foundations underlying programming languages. The progression from formal systems to lambda calculus to parsing has shown me how theoretical computer science provides the tools to understand and design programming languages systematically.
+
+One particularly enlightening aspect was learning about invariants in string rewriting systems. The realization that certain properties remain unchanged under transformation rules provides a powerful method for proving properties about algorithms and systems. This connects directly to my understanding of loop invariants in imperative programming and helps explain why certain optimizations are valid.
+
+The lambda calculus section was especially valuable for understanding functional programming. Learning that all computation can be expressed through function application and abstraction has changed how I think about programming. The Church encoding of natural numbers and the ability to represent recursion through the Y combinator demonstrate the elegance and power of functional approaches.
+
+Parsing theory has given me insight into how programming languages are processed by compilers. Understanding the relationship between concrete syntax (strings) and abstract syntax (trees) has clarified how programming languages bridge human readability with machine processing.
+
+\section{Evidence of Participation}
+
+All homework assignments have been completed and submitted through GitHub:
 \begin{itemize}
-    \item Rule (1) gives us $MIU$.
-    \item Rule (2) allows us to double the string after $M$: $MI \Rightarrow MII$, $MII \Rightarrow MIIII$, and so on.
-    \item Rule (3) lets us reduce \texttt{III} to \texttt{U}.
-    \item Rule (4) lets us delete any \texttt{UU}.
+\item Week 1: MU Puzzle analysis with invariant-based proof
+\item Week 2: String rewriting systems with termination and confluence analysis
+\item Week 3: Measure functions for algorithm termination proofs
+\item Week 4: Lambda calculus reduction exercises
+\item Week 5: Advanced lambda calculus function composition
+\item Week 6: Continued lambda calculus practice
+\item Week 7: Context-free grammars and parsing theory
 \end{itemize}
 
-At first glance, it seems plausible that we might eventually reach $MU$, especially since rules (3) and (4) allow for reduction.
+Each assignment demonstrates active engagement with the material through detailed solutions, mathematical proofs, and reflective analysis.
 
-\subsection{Key Insight}
-The crucial invariant in this puzzle is the number of \texttt{I}'s in the string. Starting from $MI$, the number of \texttt{I}'s is $1$.
+\section{Conclusion}\label{conclusion}
 
-\begin{itemize}
-    \item Rule (1) does not change the number of \texttt{I}'s.
-    \item Rule (2) doubles the number of \texttt{I}'s.
-    \item Rule (3) replaces \texttt{III} with a \texttt{U}, reducing the count of \texttt{I}'s by $3$.
-    \item Rule (4) does not affect the number of \texttt{I}'s.
-\end{itemize}
+This course has provided a solid foundation in the theoretical aspects of programming languages. The combination of formal systems, lambda calculus, and parsing theory has given me a deeper understanding of how programming languages work at a fundamental level. These concepts will be valuable as I continue to study computer science and work with different programming paradigms.
 
-Thus, the number of \texttt{I}'s is always governed by the following relation:
-\[
-\text{Number of I's} \equiv 1 \pmod{3}.
-\]
+The mathematical rigor required in this course has also improved my ability to think formally about computational problems and to construct precise arguments about program behavior.
 
-Proof sketch: we begin with $1 \equiv 1 \pmod{3}$; doubling preserves the residue class ($2 \times 1 \equiv 2 \pmod{3}$ but repeated applications always cycle back to $1$ eventually), and subtracting multiples of $3$ never changes the congruence modulo $3$.
-
-\subsection{Conclusion}
-To obtain $MU$, we would need a string with $0$ \texttt{I}'s. But since the number of \texttt{I}'s is always congruent to $1 \pmod{3}$, it can never be reduced to $0$. Therefore:
-\[
-\boxed{\text{It is impossible to derive $MU$ from $MI$.}}
-\]
-
-\subsection{Reflection}
-Working through the MU puzzle was both frustrating and fascinating. At first, the rules made it feel like if I just kept trying different transformations, I might eventually stumble onto $MU$. But after spending time applying the rules, I started noticing patterns in how the number of \texttt{I}'s changed. The realization that the puzzle really boils down to modular arithmetic was eye-opening. It showed me how something that looks like a game of trial and error can actually be solved by finding the right mathematical perspective. I think that’s the bigger lesson here: sometimes problems that seem impossible or chaotic have a hidden structure that makes them much simpler once you discover it.
+\begin{thebibliography}{99}
+\bibitem[GEB]{hofstadter} Douglas Hofstadter, \href{https://en.wikipedia.org/wiki/G%C3%B6del,_Escher,_Bach}{Gödel, Escher, Bach: An Eternal Golden Braid}, Basic Books, 1979.
+\bibitem[Church]{church} Alonzo Church, \href{https://en.wikipedia.org/wiki/Lambda_calculus}{The Calculi of Lambda-Conversion}, Princeton University Press, 1941.
+\bibitem[BNF]{bnf} John Backus, \href{https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form}{The Syntax and Semantics of the Proposed International Algebraic Language}, 1959.
+\end{thebibliography}
 
 \end{document}
