@@ -6,58 +6,51 @@
 
 ## Repository Structure
 
-This repository contains my work for CPSC-354 Programming Languages course, following the structure and guidelines from the course materials.
+This repository contains my work for CPSC-354 Programming Languages course, featuring a comprehensive consolidated report and individual homework assignments.
 
-### Contents
+### Main Contents
 
-- **Report/**: Main course report with comprehensive documentation
-  - `report.tex` - LaTeX source for the final report
-  - `report.pdf` - Compiled report document
+- **Report/**: Master consolidated report with all course content
+  - `report.tex` - LaTeX source for the comprehensive final report
+  - `report.pdf` - Compiled master report document
 
-- **hw 2/**: String Rewriting Systems
-  - `hw2.tex` - LaTeX source
-  - `hw2.pdf` - Compiled homework
-  - Supporting images and documents
-
-- **hw 3/**: Termination and Measure Functions
-  - `hw3.tex` - LaTeX source  
-  - `hw3.pdf` - Compiled homework
-
-- **hw 4/**: Lambda Calculus Foundations
-  - `hw4.tex` - LaTeX source
-  - `hw4.pdf` - Compiled homework
-
-- **hw 5/**: Lambda Calculus Workout
-  - `hw5.tex` - LaTeX source
-  - `hw5.pdf` - Compiled homework
-
-- **hw 6/**: Advanced Lambda Calculus
-  - `hw6.tex` - LaTeX source
-  - `hw6.pdf` - Compiled homework
-
-- **hw 7/**: Intro to Parsing and Context-Free Grammars
-  - `hw7.tex` - LaTeX source
-  - `hw7.pdf` - Compiled homework
+- **Individual Homeworks/**: Archive of all original homework assignments
+  - `hw 1/` - The MU Puzzle (Formal Systems)
+  - `hw 2/` - String Rewriting Systems  
+  - `hw 3/` - Termination Analysis
+  - `hw 4/` - Lambda Calculus Foundations
+  - `hw 5/` - Lambda Calculus Workout
+  - `hw 6/` - Advanced Lambda Calculus
+  - `hw 7/` - Parsing and Context-Free Grammars
 
 ## Course Topics Covered
 
-1. **Formal Systems** - The MU puzzle and string transformation rules
-2. **String Rewriting** - Abstract reduction systems, termination, and confluence
-3. **Termination** - Measure functions and algorithm termination proofs
-4. **Lambda Calculus** - Functional programming foundations and beta-reduction
-5. **Parsing Theory** - Context-free grammars and derivation trees
+1. **Week 1: Formal Systems** - The MU puzzle and string transformation rules with invariant analysis
+2. **Week 2: String Rewriting** - Abstract reduction systems, termination, and confluence
+3. **Week 3: Termination Analysis** - Measure functions and algorithm termination proofs
+4. **Week 4: Lambda Calculus** - Functional programming foundations and beta-reduction
+5. **Week 5: Lambda Calculus Workout** - Advanced function composition and evaluation
+6. **Week 6: Advanced Lambda Calculus** - Church numerals, booleans, and recursion
+7. **Week 7: Parsing Theory** - Context-free grammars and derivation trees
 
-## Report
+## Master Report
 
-The main course report (`Report/report.pdf`) provides a comprehensive overview of all topics covered, including:
-- Detailed solutions to all homework problems
-- Mathematical proofs and analysis
-- Reflections on learning outcomes
-- Evidence of participation
+The comprehensive course report (`Report/report.pdf`) consolidates all seven weeks of assignments into a single, well-structured document featuring:
+
+- **Week-by-Week Analysis**: Detailed solutions to all homework problems with mathematical proofs
+- **Comprehensive Essay**: Reflections on the learning journey and connections between topics
+- **Evidence of Participation**: Complete documentation of all completed work
+- **Professional Formatting**: LaTeX formatting following academic standards
+
+## Repository Organization
+
+- **Primary Deliverable**: `Report/report.tex` - The consolidated master report
+- **Archive**: `Individual Homeworks/` - All original homework files preserved for reference
+- **Clean Structure**: Organized for easy navigation and professional presentation
 
 ## Submission
 
-All assignments have been completed and are available in this repository. The report follows the course guidelines and LaTeX formatting standards.
+All assignments have been completed and consolidated into a comprehensive report. The master report follows course guidelines and LaTeX formatting standards, providing a complete overview of programming language theory from formal systems through advanced functional programming concepts.
 
 ## Repository Link
 
