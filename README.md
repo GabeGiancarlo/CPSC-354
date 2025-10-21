@@ -23,6 +23,9 @@ This repository contains my work for CPSC-354 Programming Languages course, feat
   - `hw 6/` - Advanced Lambda Calculus
   - `hw 7/` - Parsing and Context-Free Grammars
 
+- **Natural Number Game Report**: Additional formal verification work
+  - `nng_tutorial_report.md` - Analysis of Lean proof tactics and mathematical reasoning
+
 ## Course Topics Covered
 
 1. **Week 1: Formal Systems** - The MU puzzle and string transformation rules with invariant analysis
@@ -42,10 +45,20 @@ The comprehensive course report (`Report/report.pdf`) consolidates all seven wee
 - **Evidence of Participation**: Complete documentation of all completed work
 - **Professional Formatting**: LaTeX formatting following academic standards
 
+## Natural Number Game Analysis
+
+The Natural Number Game report (`nng_tutorial_report.md`) demonstrates the bridge between natural language mathematical reasoning and formal proof systems:
+
+- **Lean Proof Solutions**: Complete solutions for Tutorial World Levels 5-8 with detailed explanations
+- **Natural Language Proof**: Step-by-step English explanation of the mathematical reasoning behind `2 + 2 = 4`
+- **Formal Verification**: Analysis of how Lean tactics capture the essence of mathematical proof
+- **Academic Discussion**: Thoughtful questions about proof tactics and rewrite strategies
+
 ## Repository Organization
 
 - **Primary Deliverable**: `Report/report.tex` - The consolidated master report
 - **Archive**: `Individual Homeworks/` - All original homework files preserved for reference
+- **Additional Work**: `nng_tutorial_report.md` - Natural Number Game formal verification analysis
 - **Clean Structure**: Organized for easy navigation and professional presentation
 
 ## Submission
