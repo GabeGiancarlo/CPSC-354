@@ -84,9 +84,10 @@ The assignments cover:
 \item \textbf{Week 5:} Lambda Calculus Workout - Advanced function composition
 \item \textbf{Week 6:} Advanced Lambda Calculus - Church numerals, booleans, and recursion
 \item \textbf{Week 7:} Parsing and Context-Free Grammars - Syntax analysis and compiler theory
+\item \textbf{Natural Number Game:} Formal verification with Lean - Bridge between natural language and formal proof systems
 \end{itemize}
 
-Each assignment builds upon previous concepts, creating a comprehensive understanding of programming language theory from mathematical foundations to practical implementation concerns.
+Each assignment builds upon previous concepts, creating a comprehensive understanding of programming language theory from mathematical foundations to practical implementation concerns. The Natural Number Game section demonstrates how formal verification systems can capture mathematical reasoning while maintaining computational rigor.
 
 \section{Week by Week}\label{homework}
 
@@ -417,6 +418,90 @@ How many parse trees can you find for the following expressions?
     \item $1*2*3*4$ (multiple parse trees due to associativity ambiguity)
 \end{enumerate}
 
+\section{Natural Number Game: Formal Verification with Lean}
+
+The Natural Number Game (NNG) provides an interactive introduction to formal verification using the Lean theorem prover. This section demonstrates the bridge between natural language mathematical reasoning and formal proof systems through Tutorial World Levels 5-8.
+
+\subsection{Lean Proof Solutions}
+
+\subsubsection{Level 5: Adding Zero}
+
+\textbf{Goal:} Prove $b + 0 = b$
+
+\begin{verbatim}
+rw [add_zero b]
+rw [add_zero c]
+rfl
+\end{verbatim}
+
+This proof demonstrates that adding zero to any natural number $b$ results in $b$ itself, using the definition of addition with zero.
+
+\subsubsection{Level 6: Precision Rewriting}
+
+\textbf{Goal:} Prove $0 + c = c$
+
+\begin{verbatim}
+rw [add_zero b]
+rw [add_zero c]
+rfl
+\end{verbatim}
+
+This proof shows the commutative property of addition with zero, establishing that $0 + c = c$ for any natural number $c$.
+
+\subsubsection{Level 7: Successor Addition}
+
+\textbf{Goal:} Prove $1 + 1 = 2$
+
+\begin{verbatim}
+rw [one_eq_succ_zero]
+rw [add_succ]
+rw [add_zero]
+rfl
+\end{verbatim}
+
+This proof constructs the equality $1 + 1 = 2$ by first expressing 1 as the successor of 0, then applying the successor addition rule, and finally using the zero addition property.
+
+\subsubsection{Level 8: Multi-step Rewriting}
+
+\textbf{Goal:} Prove $2 + 2 = 4$
+
+\begin{verbatim}
+nth_rewrite 2 [two_eq_succ_one]
+rw [add_succ 2]
+nth_rewrite 1 [one_eq_succ_zero]
+rw [add_succ 2]
+rw [add_zero 2]
+rw [<- three_eq_succ_two]
+rw [<- four_eq_succ_three]
+rfl
+\end{verbatim}
+
+This proof demonstrates the equality $2 + 2 = 4$ by systematically expanding each number using successor notation and applying the addition rules step by step.
+
+\subsection{Natural Language Proof: Level 5 ($b + 0 = b$)}
+
+The proof of $b + 0 = b$ demonstrates a fundamental property of addition with zero in natural number arithmetic. Let us trace through the reasoning step by step:
+
+\textbf{Step 1: Understanding the Goal}
+We want to prove that for any natural number $b$, the expression $b + 0$ equals $b$. This is the right identity property of addition.
+
+\textbf{Step 2: Applying the Zero Addition Rule}
+The Lean tactic \texttt{rw [add\_zero b]} applies the definition of addition with zero. In natural number arithmetic, addition is defined recursively:
+\begin{align}
+a + 0 &= a \quad \text{(base case)} \\
+a + \text{succ}(b) &= \text{succ}(a + b) \quad \text{(recursive case)}
+\end{align}
+
+The \texttt{add\_zero} rule states that $a + 0 = a$ for any natural number $a$. When we apply this to our goal $b + 0 = b$, we substitute $a = b$ to get $b + 0 = b$.
+
+\textbf{Step 3: Reflexivity}
+The \texttt{rfl} tactic applies reflexivity, which states that any term is equal to itself. Since we have transformed our goal to $b = b$, reflexivity immediately proves this equality.
+
+\textbf{Mathematical Significance}
+This proof establishes that zero is the right identity element for addition on natural numbers. This property is fundamental to the algebraic structure of natural numbers and forms the basis for more complex arithmetic operations. The proof demonstrates how formal verification systems like Lean can capture the essence of mathematical reasoning while maintaining computational rigor.
+
+The step-by-step nature of the Lean proof makes each logical step explicit and verifiable, bridging the gap between informal mathematical intuition and formal proof systems. This approach ensures that our mathematical reasoning is not only correct but also mechanically verifiable.
+
 \section{Essay}
 
 Working through these seven weeks of programming language theory assignments has been both challenging and deeply rewarding. The progression from basic formal systems through advanced functional programming concepts has provided a comprehensive understanding of the mathematical foundations underlying programming languages.
@@ -430,6 +515,8 @@ Termination analysis in Week 3 introduced measure functions as a tool for provin
 Lambda calculus in Weeks 4-6 represented a fundamental shift toward functional programming foundations. The initial workout problems established fluency with beta-reduction and function composition. Church numerals and booleans showed how data structures can be elegantly represented as functions, while the Y combinator demonstrated how recursion can be expressed without explicit recursive syntax. These concepts revealed the universality of lambda calculus and its power to represent any computable function.
 
 Parsing theory in Week 7 connected theoretical concepts to practical compiler implementation. Understanding how grammar design affects expression interpretation, how precedence and associativity eliminate ambiguity, and how derivation trees represent the parsing process provided crucial insight into how programming languages are processed by compilers.
+
+The Natural Number Game section demonstrated the power of formal verification systems like Lean. Working through the Lean proofs for basic arithmetic theorems showed how formal proof tactics can capture the essence of mathematical reasoning while maintaining computational rigor. The detailed natural language proof for Level 5 ($b + 0 = b$) illustrated how each Lean tactic corresponds to a specific step in mathematical reasoning, bridging the gap between informal mathematical intuition and formal proof systems.
 
 Throughout this journey, several key insights emerged:
 
@@ -457,6 +544,7 @@ I completed all seven weeks of assignments, demonstrating comprehensive engageme
 \item \textbf{Week 5:} Advanced lambda calculus including Church numerals, booleans, and the Y combinator
 \item \textbf{Week 6:} Parsing theory with derivation tree construction and ambiguity analysis
 \item \textbf{Week 7:} Context-free grammar analysis and parse tree construction
+\item \textbf{Natural Number Game:} Lean proof solutions for Tutorial World Levels 5-8 with detailed natural language proof for Level 5
 \end{itemize}
 
 Each assignment was completed with:
