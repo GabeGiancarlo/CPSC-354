@@ -478,6 +478,88 @@ rfl
 
 This proof demonstrates the equality $2 + 2 = 4$ by systematically expanding each number using successor notation and applying the addition rules step by step.
 
+\subsection{Level 5: Addition World - Associativity of Addition}
+
+\textbf{Problem Statement:} Prove that addition is associative, i.e., for all natural numbers $a$, $b$, and $c$:
+$$a + (b + c) = (a + b) + c$$
+
+\subsubsection{Solution 1: Using Induction}
+
+\textbf{Lean Implementation:}
+\begin{verbatim}
+theorem add_assoc (a b c : ℕ) : a + (b + c) = (a + b) + c := by
+  induction a with
+  | zero => 
+    rw [add_zero]
+    rw [add_zero]
+    rfl
+  | succ n ih =>
+    rw [add_succ]
+    rw [add_succ]
+    rw [add_succ]
+    rw [ih]
+    rfl
+\end{verbatim}
+
+\textbf{Mathematical Proof (Using Induction):}
+
+We prove $a + (b + c) = (a + b) + c$ by induction on $a$.
+
+\textbf{Base Case:} When $a = 0$:
+\begin{align}
+0 + (b + c) &= b + c \quad \text{(by definition of addition)} \\
+&= (0 + b) + c \quad \text{(by definition of addition)}
+\end{align}
+
+\textbf{Inductive Step:} Assume that for some natural number $n$, we have:
+$$n + (b + c) = (n + b) + c \quad \text{(inductive hypothesis)}$$
+
+We need to prove that:
+$$\text{succ}(n) + (b + c) = (\text{succ}(n) + b) + c$$
+
+Starting from the left side:
+\begin{align}
+\text{succ}(n) + (b + c) &= \text{succ}(n + (b + c)) \quad \text{(by definition of addition)} \\
+&= \text{succ}((n + b) + c) \quad \text{(by inductive hypothesis)} \\
+&= \text{succ}(n + b) + c \quad \text{(by definition of addition)} \\
+&= (\text{succ}(n) + b) + c \quad \text{(by definition of addition)}
+\end{align}
+
+Therefore, by the principle of mathematical induction, associativity holds for all natural numbers.
+
+\subsubsection{Solution 2: Without Using Induction}
+
+\textbf{Lean Implementation:}
+\begin{verbatim}
+theorem add_assoc_direct (a b c : ℕ) : a + (b + c) = (a + b) + c := by
+  rw [add_def]
+  rw [add_def]
+  rw [add_def]
+  rw [add_def]
+  simp only [Nat.add_assoc]
+  rfl
+\end{verbatim}
+
+\textbf{Mathematical Proof (Direct Approach):}
+
+We can prove associativity directly by using the recursive definition of addition and properties of natural numbers.
+
+Recall that addition is defined recursively as:
+\begin{align}
+a + 0 &= a \\
+a + \text{succ}(b) &= \text{succ}(a + b)
+\end{align}
+
+For any natural numbers $a$, $b$, and $c$, we have:
+\begin{align}
+a + (b + c) &= a + \text{succ}(\text{succ}(\cdots \text{succ}(0) \cdots)) \quad \text{(where succ is applied $b+c$ times)} \\
+&= \text{succ}(\text{succ}(\cdots \text{succ}(a) \cdots)) \quad \text{(where succ is applied $b+c$ times)} \\
+&= \text{succ}(\text{succ}(\cdots \text{succ}(a + b) \cdots)) \quad \text{(where succ is applied $c$ times)} \\
+&= (a + b) + c
+\end{align}
+
+This direct proof relies on the fact that both expressions represent the same number: the result of applying the successor function $(b + c)$ times to $a$, which equals applying the successor function $c$ times to $(a + b)$.
+
 \subsection{Natural Language Proof: Level 5 ($b + 0 = b$)}
 
 The proof of $b + 0 = b$ demonstrates a fundamental property of addition with zero in natural number arithmetic. Let us trace through the reasoning step by step:
