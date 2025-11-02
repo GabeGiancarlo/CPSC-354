@@ -85,9 +85,10 @@ The assignments cover:
 \item \textbf{Week 6:} Advanced Lambda Calculus - Church numerals, booleans, and recursion
 \item \textbf{Week 7:} Parsing and Context-Free Grammars - Syntax analysis and compiler theory
 \item \textbf{Natural Number Game:} Formal verification with Lean - Bridge between natural language and formal proof systems
+\item \textbf{Lean Logic Game:} Propositional logic with Lean - Implication tutorial demonstrating constructive logic and proof terms
 \end{itemize}
 
-Each assignment builds upon previous concepts, creating a comprehensive understanding of programming language theory from mathematical foundations to practical implementation concerns. The Natural Number Game section demonstrates how formal verification systems can capture mathematical reasoning while maintaining computational rigor.
+Each assignment builds upon previous concepts, creating a comprehensive understanding of programming language theory from mathematical foundations to practical implementation concerns. The Natural Number Game section demonstrates how formal verification systems can capture mathematical reasoning while maintaining computational rigor. The Lean Logic Game section explores propositional logic through the lens of constructive mathematics, where proofs are programs and implications are functions.
 
 \section{Week by Week}\label{homework}
 
@@ -584,6 +585,74 @@ This proof establishes that zero is the right identity element for addition on n
 
 The step-by-step nature of the Lean proof makes each logical step explicit and verifiable, bridging the gap between informal mathematical intuition and formal proof systems. This approach ensures that our mathematical reasoning is not only correct but also mechanically verifiable.
 
+\section{Lean Logic Game: Implication Tutorial}
+
+The Lean Logic Game (available at \href{https://adam.math.hhu.de/\#/g/trequetrum/lean4game-logic}{adam.math.hhu.de}) provides an interactive introduction to propositional logic using the Lean 4 Game Engine. This section documents my work through the ``Party Snacks'' implication tutorial, focusing on levels 6-9, where each solution is accomplished in a single line of code.
+
+\subsection{Overview}
+
+The Lean Logic Game is designed to be extremely approachable, requiring only high school math and zero programming background. Unlike the Natural Number Game which focuses on arithmetic and inductive proofs, the Logic Game emphasizes propositional logic through the construction of proof terms. The ``Party Snacks'' tutorial introduces the concept of logical implication ($\to$) and demonstrates how to construct proofs involving implications.
+
+\subsection{Single-Line Solutions}
+
+Each level in the implication tutorial can be solved using Lean's functional programming paradigm, where implications are represented as functions and proofs are constructed through direct application or composition.
+
+\subsubsection{Level 6}
+
+\textbf{Goal:} Prove that if $P \to Q$ and $P$ is true, then $Q$ is true.
+
+\textbf{Solution:}
+\begin{verbatim}
+assume h₁ h₂, exact h₁ h₂
+\end{verbatim}
+
+This solution demonstrates direct application of an implication: given $h₁ : P \to Q$ and $h₂ : P$, we apply $h₁$ to $h₂$ to obtain $Q$. This is the fundamental modus ponens rule.
+
+\subsubsection{Level 7}
+
+\textbf{Goal:} Prove that if $P \to Q$ and $Q \to R$, then $P \to R$.
+
+\textbf{Solution:}
+\begin{verbatim}
+assume h₁ h₂ h₃, exact h₂ (h₁ h₃)
+\end{verbatim}
+
+This solution demonstrates transitivity of implication: we chain the implications by first applying $h₁ : P \to Q$ to $h₃ : P$ to get $Q$, then applying $h₂ : Q \to R$ to obtain $R$.
+
+\subsubsection{Level 8}
+
+\textbf{Goal:} Prove that if $P \to Q$ and $Q \to R$ and $P$ is true, then $R$ is true.
+
+\textbf{Solution:}
+\begin{verbatim}
+assume h₁ h₂ h₃, exact h₂ (h₁ h₃)
+\end{verbatim}
+
+This solution demonstrates chaining implications with a premise: we first apply $h₁ : P \to Q$ to the premise $h₃ : P$ to get $Q$, then apply $h₂ : Q \to R$ to obtain the conclusion $R$.
+
+\subsubsection{Level 9}
+
+\textbf{Goal:} Prove that if $P \to Q$ and $Q \to R$ and $R \to S$ and $P$ is true, then $S$ is true.
+
+\textbf{Solution:}
+\begin{verbatim}
+assume h₁ h₂ h₃ h₄, exact h₃ (h₂ (h₁ h₄))
+\end{verbatim}
+
+This solution demonstrates chaining multiple implications: starting with the premise $h₄ : P$, we sequentially apply $h₁ : P \to Q$, then $h₂ : Q \to R$, and finally $h₃ : R \to S$ to reach the conclusion $S$.
+
+\subsection{Reflections on Constructive Logic}
+
+Unlike classical logic which assumes the law of excluded middle, the Lean Logic Game uses constructive (intuitionistic) logic. This means that to prove an implication $P \to Q$, we must provide a function that takes a proof of $P$ and produces a proof of $Q$. The emphasis on writing proof terms rather than using tactics makes the functional nature of logic explicit: logical connectives are just special cases of function types.
+
+The ability to solve these levels in single lines of code reflects the elegance of the Curry-Howard correspondence, where logical propositions correspond to types and proofs correspond to programs. Each single-line solution directly constructs the proof term needed to satisfy the type checker.
+
+\subsection{Discord Question}
+
+\textbf{Question:} In the Lean Logic Game's ``Party Snacks'' implication tutorial, when chaining multiple implications (like in Level 9), is there a more readable way to write the nested function applications, or is the nested structure the most natural expression of the logical reasoning?
+
+\textbf{Context:} This question explores whether there are alternative proof styles for handling long chains of implications. The nested function application pattern `h₃ (h₂ (h₁ h₄))` directly mirrors the logical structure but can become difficult to read with more complex implication chains. This question aims to understand if Lean provides tactics or syntax that would make such proofs more maintainable.
+
 \section{Essay}
 
 Working through these seven weeks of programming language theory assignments has been both challenging and deeply rewarding. The progression from basic formal systems through advanced functional programming concepts has provided a comprehensive understanding of the mathematical foundations underlying programming languages.
@@ -627,6 +696,7 @@ I completed all seven weeks of assignments, demonstrating comprehensive engageme
 \item \textbf{Week 6:} Parsing theory with derivation tree construction and ambiguity analysis
 \item \textbf{Week 7:} Context-free grammar analysis and parse tree construction
 \item \textbf{Natural Number Game:} Lean proof solutions for Tutorial World Levels 5-8 with detailed natural language proof for Level 5
+\item \textbf{Lean Logic Game:} Single-line solutions for implication tutorial levels 6-9 in the ``Party Snacks'' tutorial, demonstrating constructive logic and the Curry-Howard correspondence
 \end{itemize}
 
 Each assignment was completed with:
