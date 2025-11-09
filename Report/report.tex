@@ -85,10 +85,10 @@ The assignments cover:
 \item \textbf{Week 6:} Advanced Lambda Calculus - Church numerals, booleans, and recursion
 \item \textbf{Week 7:} Parsing and Context-Free Grammars - Syntax analysis and compiler theory
 \item \textbf{Natural Number Game:} Formal verification with Lean - Bridge between natural language and formal proof systems
-\item \textbf{Lean Logic Game:} Propositional logic with Lean - Implication tutorial demonstrating constructive logic and proof terms
+\item \textbf{Lean Logic Game:} Propositional logic with Lean - Implication and negation tutorials demonstrating constructive logic and proof terms
 \end{itemize}
 
-Each assignment builds upon previous concepts, creating a comprehensive understanding of programming language theory from mathematical foundations to practical implementation concerns. The Natural Number Game section demonstrates how formal verification systems can capture mathematical reasoning while maintaining computational rigor. The Lean Logic Game section explores propositional logic through the lens of constructive mathematics, where proofs are programs and implications are functions.
+Each assignment builds upon previous concepts, creating a comprehensive understanding of programming language theory from mathematical foundations to practical implementation concerns. The Natural Number Game section demonstrates how formal verification systems can capture mathematical reasoning while maintaining computational rigor. The Lean Logic Game sections explore propositional logic through the lens of constructive mathematics, where proofs are programs and implications are functions, and negation is defined as implication to False.
 
 \section{Week by Week}\label{homework}
 
@@ -142,6 +142,12 @@ But MU has $n_I = 0$, so $n_I \equiv 0 \pmod{3}$.
 \subsubsection{Conclusion}
 
 Since MU has 0 I's (which is congruent to 0 modulo 3), and we can never reach a string with 0 I's from MI (which has 1 I), it is impossible to derive MU from MI using the given rules.
+
+\subsubsection{Discord Question}
+
+\textbf{Question:} In the MU puzzle, we used the invariant that the number of I's is always congruent to 1 modulo 3. Are there other invariants we could have used to prove the same result? What makes an invariant useful for proving impossibility results?
+
+\textbf{Context:} This question explores alternative approaches to proving impossibility in formal systems. Understanding different invariant properties can provide multiple ways to analyze the same problem and deepen our understanding of formal system behavior.
 
 \subsection{Week 2: String Rewriting Systems}
 
@@ -227,6 +233,12 @@ The rewrite rules are:
   \textbf{Specification:} the algorithm takes a word over $\{\texttt{a},\texttt{b}\}$ and returns a single letter that tells you the parity of the number of \texttt{b}'s: \texttt{a} for even parity, \texttt{b} for odd parity. Equivalently, it computes the XOR (parity) of the letters when \texttt{a}=0 and \texttt{b}=1.
 \end{enumerate}
 
+\subsubsection{Discord Question}
+
+\textbf{Question:} In Exercise 2 (parity computation), we used the invariant ``parity of the number of \texttt{b}'s'' to prove confluence. Could we have used a different invariant, or is this the most natural one? How do we know when we've found the ``right'' invariant for characterizing an abstract reduction system?
+
+\textbf{Context:} This question explores the process of discovering invariants. The parity invariant perfectly characterizes the equivalence classes, but understanding why this particular invariant works and whether alternatives exist helps develop intuition for analyzing ARS systems.
+
 \subsection{Week 3: Termination Analysis}
 
 \subsubsection{Problem 4.1: Euclidean Algorithm}
@@ -269,6 +281,12 @@ is a measure function for \texttt{merge\_sort}.
 
 \textbf{Solution:} The measure function $\varphi(left, right) = right - left + 1$ represents the size of the subarray being sorted. Each recursive call operates on a strictly smaller subarray, so the measure decreases with each recursive call, ensuring termination.
 
+\subsubsection{Discord Question}
+
+\textbf{Question:} When proving termination using measure functions, how do we know if we've chosen the ``best'' measure function? For the Euclidean algorithm, we used $\varphi(a,b) = b$, but could we have used something like $\varphi(a,b) = a + b$ or $\max(a,b)$? What makes a measure function effective?
+
+\textbf{Context:} This question explores the art of choosing measure functions. While multiple measure functions may work, some are more natural or easier to work with. Understanding the trade-offs helps develop better intuition for termination proofs.
+
 \subsection{Week 4: Lambda Calculus}
 
 \subsubsection{Workout Problem}
@@ -305,6 +323,12 @@ M N &= (\lambda f.\lambda x.f(f(x))) (\lambda f.\lambda x.(f(f(f x)))) \\
     \item \textbf{Final result:} The expression reduces to:
     $$\lambda x. f(f(f(f(f(f x)))))$$
 \end{enumerate}
+
+\subsubsection{Discord Question}
+
+\textbf{Question:} In the lambda calculus workout, we saw how function composition works through beta-reduction. When evaluating $(\lambda f.\lambda x.f(f(x))) (\lambda f.\lambda x.(f(f(f x))))$, we had to be careful about variable capture. How does variable capture relate to the concept of scope in programming languages? Are there parallels with how modern languages handle closures?
+
+\textbf{Context:} This question connects lambda calculus theory to practical programming language concepts. Understanding variable capture in lambda calculus helps explain scoping rules in functional programming languages.
 
 \subsection{Week 5: Advanced Lambda Calculus}
 
@@ -365,6 +389,12 @@ $$Y = \lambda f.(\lambda x.f(x x))(\lambda x.f(x x))$$
 We can define factorial using the Y combinator:
 
 $$\text{factorial} = Y(\lambda f.\lambda n.\text{if } (n = 0) \text{ then } 1 \text{ else } n \times f(n-1))$$
+
+\subsubsection{Discord Question}
+
+\textbf{Question:} The Y combinator allows us to define recursive functions in pure lambda calculus without explicit recursion syntax. How does this relate to how modern functional programming languages implement recursion? Do languages like Haskell or OCaml use similar techniques under the hood, or do they have built-in recursion support?
+
+\textbf{Context:} This question explores the connection between theoretical lambda calculus and practical language implementation. Understanding how recursion is encoded in lambda calculus provides insight into how functional languages work.
 
 \textbf{Computing Factorial with Fixed Point Combinator}
 
@@ -455,11 +485,173 @@ Using the context-free grammar:
 Write out the derivation trees for the following strings:
 
 \begin{enumerate}[label=(\alph*)]
-    \item $2+1$
-    \item $1+2*3$
-    \item $1+(2*3)$
-    \item $(1+2)*3$
-    \item $1+2*3+4*5+6$
+    \item \textbf{$2+1$}
+    
+    \begin{verbatim}
+        Exp
+        /|\
+       / | \
+      /  |  \
+    Exp  +  Exp1
+     |       |
+    Exp1    Exp2
+     |       |
+    Exp2   Integer
+     |       |
+   Integer    1
+     |
+     2
+    \end{verbatim}
+    
+    Derivation: Exp $\to$ Exp '+' Exp1 $\to$ Exp1 '+' Exp1 $\to$ Exp2 '+' Exp1 $\to$ Integer '+' Exp1 $\to$ '2' '+' Exp1 $\to$ '2' '+' Exp2 $\to$ '2' '+' Integer $\to$ '2' '+' '1'
+    
+    \item \textbf{$1+2*3$}
+    
+    \begin{verbatim}
+        Exp
+        /|\
+       / | \
+      /  |  \
+    Exp  +  Exp1
+     |       |
+    Exp1    Exp1
+     |      /|\
+    Exp2   / | \
+     |    /  |  \
+   Integer Exp1 * Exp2
+     |     |     |
+     1   Exp2  Integer
+         |       |
+      Integer    3
+         |
+         2
+    \end{verbatim}
+    
+    Derivation: Exp $\to$ Exp '+' Exp1 $\to$ Exp1 '+' Exp1 $\to$ Exp2 '+' Exp1 $\to$ Integer '+' Exp1 $\to$ '1' '+' Exp1 $\to$ '1' '+' Exp1 '*' Exp2 $\to$ '1' '+' Exp2 '*' Exp2 $\to$ '1' '+' Integer '*' Exp2 $\to$ '1' '+' '2' '*' Exp2 $\to$ '1' '+' '2' '*' Integer $\to$ '1' '+' '2' '*' '3'
+    
+    \item \textbf{$1+(2*3)$}
+    
+    \begin{verbatim}
+        Exp
+        /|\
+       / | \
+      /  |  \
+    Exp  +  Exp1
+     |       |
+    Exp1    Exp2
+     |      /|\
+    Exp2   ( | )
+     |       |
+   Integer   Exp
+     |      /|\
+     1     / | \
+         Exp  +  Exp1
+          |       |
+         Exp1    Exp1
+          |      /|\
+         Exp2   / | \
+          |    /  |  \
+       Integer Exp1 * Exp2
+          |     |     |
+          2   Exp2  Integer
+              |       |
+           Integer    3
+              |
+              3
+    \end{verbatim}
+    
+    Derivation: Exp $\to$ Exp '+' Exp1 $\to$ Exp1 '+' Exp1 $\to$ Exp2 '+' Exp1 $\to$ Integer '+' Exp1 $\to$ '1' '+' Exp1 $\to$ '1' '+' Exp2 $\to$ '1' '+' '(' Exp ')' $\to$ '1' '+' '(' Exp '+' Exp1 ')' $\to$ '1' '+' '(' Exp1 '+' Exp1 ')' $\to$ '1' '+' '(' Exp2 '+' Exp1 ')' $\to$ '1' '+' '(' Integer '+' Exp1 ')' $\to$ '1' '+' '(' '2' '+' Exp1 ')' $\to$ '1' '+' '(' '2' '+' Exp1 '*' Exp2 ')' $\to$ '1' '+' '(' '2' '+' Exp2 '*' Exp2 ')' $\to$ '1' '+' '(' '2' '+' Integer '*' Exp2 ')' $\to$ '1' '+' '(' '2' '+' '3' '*' Exp2 ')' $\to$ '1' '+' '(' '2' '+' '3' '*' Integer ')' $\to$ '1' '+' '(' '2' '+' '3' '*' '3' ')'
+    
+    \item \textbf{$(1+2)*3$}
+    
+    For $(1+2)*3$, the parentheses force the addition to be evaluated first, then the multiplication. The tree structure reflects this:
+    
+    \begin{verbatim}
+        Exp1
+        /|\
+       / | \
+      /  |  \
+    Exp1 * Exp2
+     |       |
+    Exp2   Integer
+     |       |
+    ( Exp )   3
+     /|\
+    / | \
+   /  |  \
+  Exp  +  Exp1
+   |       |
+  Exp1    Exp1
+   |       |
+  Exp2    Exp2
+   |       |
+ Integer  Integer
+   |       |
+   1       2
+    \end{verbatim}
+    
+    Derivation: Exp1 $\to$ Exp1 '*' Exp2 $\to$ Exp2 '*' Exp2 $\to$ '(' Exp ')' '*' Exp2 $\to$ '(' Exp '+' Exp1 ')' '*' Exp2 $\to$ '(' Exp1 '+' Exp1 ')' '*' Exp2 $\to$ '(' Exp2 '+' Exp1 ')' '*' Exp2 $\to$ '(' Integer '+' Exp1 ')' '*' Exp2 $\to$ '(' '1' '+' Exp1 ')' '*' Exp2 $\to$ '(' '1' '+' Exp2 ')' '*' Exp2 $\to$ '(' '1' '+' Integer ')' '*' Exp2 $\to$ '(' '1' '+' '2' ')' '*' Exp2 $\to$ '(' '1' '+' '2' ')' '*' Integer $\to$ '(' '1' '+' '2' ')' '*' '3'
+    
+    \item \textbf{$1+2*3+4*5+6$}
+    
+    \begin{verbatim}
+        Exp
+        /|\
+       / | \
+      /  |  \
+    Exp  +  Exp1
+     |       |
+    Exp1    Exp1
+     |      /|\
+    Exp2   / | \
+     |    /  |  \
+   Integer Exp1 * Exp2
+     |     |     |
+     1   Exp2  Integer
+         |       |
+      Integer    6
+         |
+         5
+    \end{verbatim}
+    
+    This is a simplified view. The full tree shows left-associativity of addition and precedence of multiplication:
+    
+    \begin{verbatim}
+                    Exp
+                    /|\
+                   / | \
+                  /  |  \
+                Exp  +  Exp1
+                /|\      |
+               / | \     |
+              /  |  \    |
+            Exp  +  Exp1 Exp1
+            /|\      |    /|\
+           / | \     |   / | \
+          /  |  \    |  /  |  \
+        Exp  +  Exp1 | Exp1 * Exp2
+        /|\      |   |  |     |
+       / | \     |   | Exp2  Integer
+      /  |  \    |   |  |       |
+    Exp1 Exp1 Exp1 Exp2 Integer  6
+     |    |    |    |     |
+    Exp2 Exp2 Exp2 Integer 5
+     |    |    |     |
+   Integer Exp2 Integer 4
+     |     |     |
+     1   Exp2    3
+         /|\
+        / | \
+      Exp1 * Exp2
+       |     |
+      Exp2  Integer
+       |       |
+    Integer    2
+       |
+       2
+    \end{verbatim}
+    
+    Derivation: Exp $\to$ Exp '+' Exp1 $\to$ (Exp '+' Exp1) '+' Exp1 $\to$ ((Exp '+' Exp1) '+' Exp1) '+' Exp1 $\to$ ((Exp1 '+' Exp1) '+' Exp1) '+' Exp1 $\to$ ... (with multiplication having higher precedence at each Exp1 level)
 \end{enumerate}
 
 \subsubsection{Problem 2: Unparsable Strings}
@@ -499,6 +691,12 @@ Answer the question above using instead the grammar:
 \text{Exp1} &\to \text{Exp2} \\
 \text{Exp2} &\to \text{Integer}
 \end{align}
+
+\subsubsection{Discord Question}
+
+\textbf{Question:} In parsing theory, we saw how grammar design affects expression interpretation through precedence and associativity. When designing a programming language, how do we decide what precedence levels to assign to different operators? For example, why does multiplication typically have higher precedence than addition, and how do we handle new operators like exponentiation or logical operators?
+
+\textbf{Context:} This question explores the practical considerations in language design. Understanding how precedence rules are chosen helps explain why different languages may parse the same expression differently, and how language designers balance mathematical conventions with programmer expectations.
 
 \section{Natural Number Game: Formal Verification with Lean}
 
@@ -666,6 +864,12 @@ This proof establishes that zero is the right identity element for addition on n
 
 The step-by-step nature of the Lean proof makes each logical step explicit and verifiable, bridging the gap between informal mathematical intuition and formal proof systems. This approach ensures that our mathematical reasoning is not only correct but also mechanically verifiable.
 
+\subsection{Discord Question}
+
+\textbf{Question:} In Addition World Level 5, we provided two solutions for associativity of addition: one using induction and one without. When is it preferable to use induction versus a direct proof? Are there cases where a direct proof is impossible and induction is necessary, or vice versa?
+
+\textbf{Context:} This question explores the relationship between inductive and direct proof strategies. Understanding when each approach is most natural helps develop better proof-writing intuition and reveals the deep connections between recursive definitions and inductive reasoning.
+
 \section{Lean Logic Game: Implication Tutorial}
 
 The Lean Logic Game (available at \href{https://adam.math.hhu.de/\#/g/trequetrum/lean4game-logic}{adam.math.hhu.de}) provides an interactive introduction to propositional logic using the Lean 4 Game Engine. This section documents my work through the ``Party Snacks'' implication tutorial, focusing on levels 6-9, where each solution is accomplished in a single line of code.
@@ -678,49 +882,49 @@ The Lean Logic Game is designed to be extremely approachable, requiring only hig
 
 Each level in the implication tutorial can be solved using Lean's functional programming paradigm, where implications are represented as functions and proofs are constructed through direct application or composition.
 
-\subsubsection{Level 6}
+\subsubsection{Level 6: Currying (and\_imp)}
 
-\textbf{Goal:} Prove that if $P \to Q$ and $P$ is true, then $Q$ is true.
-
-\textbf{Solution:}
-\begin{verbatim}
-assume h₁ h₂, exact h₁ h₂
-\end{verbatim}
-
-This solution demonstrates direct application of an implication: given $h₁ : P \to Q$ and $h₂ : P$, we apply $h₁$ to $h₂$ to obtain $Q$. This is the fundamental modus ponens rule.
-
-\subsubsection{Level 7}
-
-\textbf{Goal:} Prove that if $P \to Q$ and $Q \to R$, then $P \to R$.
+\textbf{Goal:} Prove that if $C \land D \to S$, then $C \to D \to S$ (where $C$ = chips, $D$ = dip, $S$ = popular party snack).
 
 \textbf{Solution:}
 \begin{verbatim}
-assume h₁ h₂ h₃, exact h₂ (h₁ h₃)
+exact λc d ↦ h (and_intro c d)
 \end{verbatim}
 
-This solution demonstrates transitivity of implication: we chain the implications by first applying $h₁ : P \to Q$ to $h₃ : P$ to get $Q$, then applying $h₂ : Q \to R$ to obtain $R$.
+This solution demonstrates currying: we transform a function that takes a pair $(C \land D)$ into a function that takes $C$ and returns a function that takes $D$. Given $c : C$ and $d : D$, we construct the pair using `and_intro c d` and apply the hypothesis $h$.
 
-\subsubsection{Level 8}
+\subsubsection{Level 7: Uncurrying (and\_imp 2)}
 
-\textbf{Goal:} Prove that if $P \to Q$ and $Q \to R$ and $P$ is true, then $R$ is true.
+\textbf{Goal:} Prove that if $C \to D \to S$, then $C \land D \to S$.
 
 \textbf{Solution:}
 \begin{verbatim}
-assume h₁ h₂ h₃, exact h₂ (h₁ h₃)
+exact λ(cd: C ∧ D) ↦ h cd.left cd.right
 \end{verbatim}
 
-This solution demonstrates chaining implications with a premise: we first apply $h₁ : P \to Q$ to the premise $h₃ : P$ to get $Q$, then apply $h₂ : Q \to R$ to obtain the conclusion $R$.
+This solution demonstrates uncurrying: we transform a curried function into one that takes a pair. Given a pair $cd : C \land D$, we extract its components using `cd.left` and `cd.right`, then apply the curried function $h$.
 
-\subsubsection{Level 9}
+\subsubsection{Level 8: Distributing (Distribute)}
 
-\textbf{Goal:} Prove that if $P \to Q$ and $Q \to R$ and $R \to S$ and $P$ is true, then $S$ is true.
+\textbf{Goal:} Prove that if $(S \to C) \land (S \to D)$, then $S \to C \land D$ (where $S$ = shopping, $C$ = chips, $D$ = dip).
 
 \textbf{Solution:}
 \begin{verbatim}
-assume h₁ h₂ h₃ h₄, exact h₃ (h₂ (h₁ h₄))
+exact λ(s : S) ↦ and_intro (h.left s) (h.right s)
 \end{verbatim}
 
-This solution demonstrates chaining multiple implications: starting with the premise $h₄ : P$, we sequentially apply $h₁ : P \to Q$, then $h₂ : Q \to R$, and finally $h₃ : R \to S$ to reach the conclusion $S$.
+This solution demonstrates how implication distributes over conjunction. Given $h : (S \to C) \land (S \to D)$ and $s : S$, we apply both implications to get $C$ and $D$, then combine them into $C \land D$.
+
+\subsubsection{Level 9: Uncertain Snacks (BOSS LEVEL)}
+
+\textbf{Goal:} Prove that $R \to (S \to R) \land (\neg S \to R)$ (where $R$ = Riffin brings snack, $S$ = Sybeth brings snack).
+
+\textbf{Solution:}
+\begin{verbatim}
+exact λr ↦ and_intro (λ_ ↦ r) λ_ ↦ r
+\end{verbatim}
+
+This solution demonstrates that if $R$ is true, then it's true regardless of whether $S$ is true or false. We construct a pair where both implications ignore their premise (using `_`) and simply return $r$.
 
 \subsection{Reflections on Constructive Logic}
 
@@ -734,9 +938,77 @@ The ability to solve these levels in single lines of code reflects the elegance 
 
 \textbf{Context:} This question explores whether there are alternative proof styles for handling long chains of implications. The nested function application pattern `h₃ (h₂ (h₁ h₄))` directly mirrors the logical structure but can become difficult to read with more complex implication chains. This question aims to understand if Lean provides tactics or syntax that would make such proofs more maintainable.
 
+\section{Lean Logic Game: Negation Tutorial}
+
+The Lean Logic Game's Negation Tutorial continues our exploration of propositional logic by introducing negation ($\neg$). In constructive logic, negation is defined as $\neg P = P \to \text{False}$, meaning that to prove $\neg P$, we must show that assuming $P$ leads to a contradiction. This section documents my work through levels 9-12 of the negation tutorial, where each solution is accomplished in a single line of code.
+
+\subsection{Overview}
+
+The negation tutorial builds upon the implication concepts from the ``Party Snacks'' tutorial. Working with negation in constructive logic requires understanding how to construct proofs that lead to contradictions and how to use negation elimination rules. Each level demonstrates different patterns for working with negated propositions.
+
+\subsection{Single-Line Solutions}
+
+Each level in the negation tutorial can be solved using Lean's functional programming paradigm, where negation is represented as an implication to False and proofs are constructed through direct application or contradiction.
+
+\subsubsection{Level 9: Implies a Negation}
+
+\textbf{Goal:} Prove that if $P \to \neg A$, then $\neg(P \land A)$ (where $P$ = Pippin attends, $A$ = avocado present).
+
+\textbf{Solution:}
+\begin{verbatim}
+exact λ(pa : P ∧ A) ↦ h pa.left pa.right
+\end{verbatim}
+
+This solution demonstrates negation introduction: given $h : P \to \neg A$ and assuming $P \land A$, we extract $P$ and $A$ from the pair, then apply $h$ to get $\neg A$, which contradicts $A$, proving $\neg(P \land A)$.
+
+\subsubsection{Level 10: Conjunction Implication}
+
+\textbf{Goal:} Prove that if $\neg(P \land A)$, then $P \to \neg A$.
+
+\textbf{Solution:}
+\begin{verbatim}
+exact λ(p: P)(a : A) ↦ h (and_intro p a)
+\end{verbatim}
+
+This solution demonstrates the converse: given $\neg(P \land A)$ and assuming both $P$ and $A$, we construct the pair $P \land A$ which contradicts the hypothesis $h$, proving $P \to \neg A$.
+
+\subsubsection{Level 11: Triple Negation (not\_not\_not)}
+
+\textbf{Goal:} Prove that $\neg\neg\neg A \to \neg A$ (showing that triple negation reduces to single negation).
+
+\textbf{Solution:}
+\begin{verbatim}
+exact λa ↦ h λna ↦ na a
+\end{verbatim}
+
+This solution demonstrates triple negation elimination: given $h : \neg\neg\neg A$ and assuming $a : A$, we construct $\neg\neg A$ as $\lambda na \mapsto na a$, which contradicts $h$, proving $\neg A$.
+
+\subsubsection{Level 12: Negation Introduction Boss}
+
+\textbf{Goal:} Prove that if $\neg(B \to C)$, then $\neg\neg B$ (where $B$ = you bought this cake, $C$ = cake tastes horrible).
+
+\textbf{Solution:}
+\begin{verbatim}
+exact λnb ↦ h (λb ↦ false_elim (nb b))
+\end{verbatim}
+
+This solution demonstrates a sophisticated negation pattern: given $\neg(B \to C)$ and assuming $\neg B$, we construct $B \to C$ as a function that takes $b : B$ and derives a contradiction from $\neg B$ and $B$, which contradicts $h$, proving $\neg\neg B$.
+
+\subsection{Reflections on Negation in Constructive Logic}
+
+Negation in constructive logic differs from classical logic in important ways. Since $\neg P$ is defined as $P \to \text{False}$, proving a negation requires showing that assuming the proposition leads to a contradiction. This means we cannot use the law of excluded middle ($P \lor \neg P$) or double negation elimination ($\neg\neg P \to P$) without additional axioms.
+
+The single-line solutions in this tutorial demonstrate how negation proofs can be constructed directly as functions that take a proof of $P$ and produce a proof of False (a contradiction). This functional view makes the constructive nature of negation explicit and shows how proof terms can elegantly capture logical reasoning.
+
+\subsection{Discord Question}
+
+\textbf{Question:} In the Lean Logic Game's negation tutorial, Level 12 demonstrates that $\neg(B \to C)$ implies $\neg\neg B$. This seems counterintuitive - why does the negation of an implication guarantee that the premise is not false? How does this relate to the constructive logic principle that we cannot prove double negation elimination?
+
+\textbf{Context:} This question explores the relationship between negation of implications and double negation in constructive logic. The proof shows that if an implication is false, then the premise cannot be false (i.e., $\neg\neg B$). This is interesting because while we can prove $\neg\neg B$ from $\neg(B \to C)$, we cannot generally eliminate the double negation to get $B$ in constructive logic without additional axioms.
+
 \section{Essay}
 
-Working through these seven weeks of programming language theory assignments has been both challenging and deeply rewarding. The progression from basic formal systems through advanced functional programming concepts has provided a comprehensive understanding of the mathematical foundations underlying programming languages.
+Working through these seven weeks of programming language theory assignments has been both challenging and rewarding. The progression from basic formal systems through advanced functional programming concepts has provided a comprehensive understanding of the mathematical foundations underlying programming languages.
 
 The journey began with the MU puzzle, which introduced the power of invariants in formal systems. This seemingly simple string transformation problem demonstrated how mathematical properties can be used to prove impossibility results, a concept that would prove crucial throughout the course. The realization that certain properties remain unchanged under transformation rules provides a powerful method for proving properties about algorithms and systems.
 
@@ -777,7 +1049,7 @@ I completed all seven weeks of assignments, demonstrating comprehensive engageme
 \item \textbf{Week 6:} Advanced lambda calculus with Church numerals, boolean operations, and fixed point combinators
 \item \textbf{Week 7:} Parsing theory with derivation tree construction, ambiguity analysis, and context-free grammar analysis
 \item \textbf{Natural Number Game:} Lean proof solutions for Tutorial World Levels 5-8 with detailed natural language proof for Level 5
-\item \textbf{Lean Logic Game:} Single-line solutions for implication tutorial levels 6-9 in the ``Party Snacks'' tutorial, demonstrating constructive logic and the Curry-Howard correspondence
+\item \textbf{Lean Logic Game:} Single-line solutions for implication tutorial levels 6-9 in the ``Party Snacks'' tutorial and negation tutorial levels 9-12, demonstrating constructive logic and the Curry-Howard correspondence
 \end{itemize}
 
 Each assignment was completed with:
