@@ -366,7 +366,78 @@ We can define factorial using the Y combinator:
 
 $$\text{factorial} = Y(\lambda f.\lambda n.\text{if } (n = 0) \text{ then } 1 \text{ else } n \times f(n-1))$$
 
-\subsection{Week 6: Parsing and Context-Free Grammars}
+\textbf{Computing Factorial with Fixed Point Combinator}
+
+Following the computation rules for \texttt{fix}, \texttt{let}, and \texttt{let rec}:
+
+\begin{align*}
+\texttt{fix } F &\to (F (\texttt{fix } F)) \\
+\texttt{let } x = e_1 \texttt{ in } e_2 &\to (\lambda x.e_2) e_1 \\
+\texttt{let rec } f = e_1 \texttt{ in } e_2 &\to \texttt{let } f = (\texttt{fix } (\lambda f. e_1)) \texttt{ in } e_2
+\end{align*}
+
+We compute \texttt{fact 3} step by step:
+
+\begin{align*}
+&\texttt{let rec fact = } \lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * \texttt{ fact } (n-1) \texttt{ in fact 3} \\
+&\quad \to \quad \text{(def of let rec)} \\
+&\texttt{let fact = (fix } F) \texttt{ in fact 3} \\
+&\quad \text{where } F = \lambda f.\lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * f (n-1) \\
+&\quad \to \quad \text{(def of let)} \\
+&(\lambda \texttt{fact}. \texttt{ fact 3}) (\texttt{fix } F) \\
+&\quad \to \quad \text{(beta rule: substitute fix } F) \\
+&(\texttt{fix } F) 3 \\
+&\quad \to \quad \text{(def of fix)} \\
+&(F (\texttt{fix } F)) 3 \\
+&\quad \to \quad \text{(beta rule: substitute fix } F) \\
+&((\lambda f.\lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * f (n-1)) (\texttt{fix } F)) 3 \\
+&\quad \to \quad \text{(beta rule: substitute fix } F) \\
+&(\lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * (\texttt{fix } F) (n-1)) 3 \\
+&\quad \to \quad \text{(beta rule: substitute 3)} \\
+&\texttt{if } 3=0 \texttt{ then } 1 \texttt{ else } 3 * (\texttt{fix } F) (3-1) \\
+&\quad \to \quad \text{(def of if: } 3=0 \to \texttt{False}) \\
+&3 * (\texttt{fix } F) 2 \\
+&\quad \to \quad \text{(def of fix)} \\
+&3 * (F (\texttt{fix } F)) 2 \\
+&\quad \to \quad \text{(beta rule)} \\
+&3 * ((\lambda f.\lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * f (n-1)) (\texttt{fix } F)) 2 \\
+&\quad \to \quad \text{(beta rule)} \\
+&3 * (\lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * (\texttt{fix } F) (n-1)) 2 \\
+&\quad \to \quad \text{(beta rule: substitute 2)} \\
+&3 * (\texttt{if } 2=0 \texttt{ then } 1 \texttt{ else } 2 * (\texttt{fix } F) (2-1)) \\
+&\quad \to \quad \text{(def of if: } 2=0 \to \texttt{False}) \\
+&3 * (2 * (\texttt{fix } F) 1) \\
+&\quad \to \quad \text{(def of fix)} \\
+&3 * (2 * (F (\texttt{fix } F)) 1) \\
+&\quad \to \quad \text{(beta rule)} \\
+&3 * (2 * ((\lambda f.\lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * f (n-1)) (\texttt{fix } F)) 1) \\
+&\quad \to \quad \text{(beta rule)} \\
+&3 * (2 * (\lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * (\texttt{fix } F) (n-1)) 1) \\
+&\quad \to \quad \text{(beta rule: substitute 1)} \\
+&3 * (2 * (\texttt{if } 1=0 \texttt{ then } 1 \texttt{ else } 1 * (\texttt{fix } F) (1-1))) \\
+&\quad \to \quad \text{(def of if: } 1=0 \to \texttt{False}) \\
+&3 * (2 * (1 * (\texttt{fix } F) 0)) \\
+&\quad \to \quad \text{(def of fix)} \\
+&3 * (2 * (1 * (F (\texttt{fix } F)) 0)) \\
+&\quad \to \quad \text{(beta rule)} \\
+&3 * (2 * (1 * ((\lambda f.\lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * f (n-1)) (\texttt{fix } F)) 0)) \\
+&\quad \to \quad \text{(beta rule)} \\
+&3 * (2 * (1 * (\lambda n.\texttt{ if } n=0 \texttt{ then } 1 \texttt{ else } n * (\texttt{fix } F) (n-1)) 0)) \\
+&\quad \to \quad \text{(beta rule: substitute 0)} \\
+&3 * (2 * (1 * (\texttt{if } 0=0 \texttt{ then } 1 \texttt{ else } 0 * (\texttt{fix } F) (0-1)))) \\
+&\quad \to \quad \text{(def of if: } 0=0 \to \texttt{True}) \\
+&3 * (2 * (1 * 1)) \\
+&\quad \to \quad \text{(arithmetic)} \\
+&3 * (2 * 1) \\
+&\quad \to \quad \text{(arithmetic)} \\
+&3 * 2 \\
+&\quad \to \quad \text{(arithmetic)} \\
+&6
+\end{align*}
+
+This computation demonstrates how the fixed point combinator enables recursion in lambda calculus by repeatedly applying the function to itself until the base case is reached.
+
+\subsection{Week 7: Parsing and Context-Free Grammars}
 
 \subsubsection{Problem 1: Derivation Trees}
 
@@ -418,6 +489,16 @@ How many parse trees can you find for the following expressions?
     \item $1+2+3$ (2 parse trees due to associativity ambiguity)
     \item $1*2*3*4$ (multiple parse trees due to associativity ambiguity)
 \end{enumerate}
+
+Answer the question above using instead the grammar:
+
+\begin{align}
+\text{Exp} &\to \text{Exp '+' Exp1} \\
+\text{Exp} &\to \text{Exp1} \\
+\text{Exp1} &\to \text{Exp1 '*' Exp2} \\
+\text{Exp1} &\to \text{Exp2} \\
+\text{Exp2} &\to \text{Integer}
+\end{align}
 
 \section{Natural Number Game: Formal Verification with Lean}
 
@@ -693,8 +774,8 @@ I completed all seven weeks of assignments, demonstrating comprehensive engageme
 \item \textbf{Week 3:} Termination analysis of the Euclidean algorithm and merge sort using measure functions
 \item \textbf{Week 4:} Lambda calculus workout with careful step-by-step evaluation of complex expressions
 \item \textbf{Week 5:} Advanced lambda calculus including Church numerals, booleans, and the Y combinator
-\item \textbf{Week 6:} Parsing theory with derivation tree construction and ambiguity analysis
-\item \textbf{Week 7:} Context-free grammar analysis and parse tree construction
+\item \textbf{Week 6:} Advanced lambda calculus with Church numerals, boolean operations, and fixed point combinators
+\item \textbf{Week 7:} Parsing theory with derivation tree construction, ambiguity analysis, and context-free grammar analysis
 \item \textbf{Natural Number Game:} Lean proof solutions for Tutorial World Levels 5-8 with detailed natural language proof for Level 5
 \item \textbf{Lean Logic Game:} Single-line solutions for implication tutorial levels 6-9 in the ``Party Snacks'' tutorial, demonstrating constructive logic and the Curry-Howard correspondence
 \end{itemize}
