@@ -86,6 +86,7 @@ The assignments cover:
 \item \textbf{Week 7:} Parsing and Context-Free Grammars - Syntax analysis and compiler theory
 \item \textbf{Natural Number Game:} Formal verification with Lean - Bridge between natural language and formal proof systems
 \item \textbf{Lean Logic Game:} Propositional logic with Lean - Implication and negation tutorials demonstrating constructive logic and proof terms
+\item \textbf{Week 12:} Towers of Hanoi - Recursive algorithms, execution traces, and the relationship between stack machines and rewriting machines
 \end{itemize}
 
 Each assignment builds upon previous concepts, creating a comprehensive understanding of programming language theory from mathematical foundations to practical implementation concerns. The Natural Number Game section demonstrates how formal verification systems can capture mathematical reasoning while maintaining computational rigor. The Lean Logic Game sections explore propositional logic through the lens of constructive mathematics, where proofs are programs and implications are functions, and negation is defined as implication to False.
@@ -698,6 +699,222 @@ Answer the question above using instead the grammar:
 
 \textbf{Context:} This question explores the practical considerations in language design. Understanding how precedence rules are chosen helps explain why different languages may parse the same expression differently, and how language designers balance mathematical conventions with programmer expectations.
 
+\section{Week 12: Towers of Hanoi}
+
+The Towers of Hanoi puzzle provides a classic example of recursive problem-solving and demonstrates the relationship between recursive algorithms, execution traces, and different computational models. This assignment explores how a simple recursive algorithm can solve a complex problem and how the execution can be viewed through both stack-based and rewriting-based machine models.
+
+\subsection{Problem Statement}
+
+The Towers of Hanoi puzzle consists of three pegs and $n$ disks of different sizes. Initially, all disks are stacked on the first peg in decreasing order of size (largest at the bottom). The goal is to move all disks to the third peg, following these rules:
+\begin{enumerate}
+\item Only one disk can be moved at a time
+\item Only the topmost disk from a peg can be moved
+\item A larger disk cannot be placed on top of a smaller disk
+\end{enumerate}
+
+The recursive algorithm for solving this puzzle is given by:
+\begin{align}
+\texttt{hanoi } 1\ x\ y &= \texttt{move } x\ y \\
+\texttt{hanoi } (n+1)\ x\ y &= \texttt{hanoi } n\ x\ (\texttt{other } x\ y) \\
+&\quad \texttt{move } x\ y \\
+&\quad \texttt{hanoi } n\ (\texttt{other } x\ y)\ y
+\end{align}
+
+where \texttt{other } $x\ y$ computes the third peg (neither $x$ nor $y$), and \texttt{move } $x\ y$ moves the topmost disk from peg $x$ to peg $y$.
+
+\subsection{Complete Recursive Trace}
+
+For \texttt{hanoi 5 0 2}, we complete the execution trace. Note that \texttt{other } $x\ y = \text{mod}(2(x+y), 3)$, so:
+\begin{itemize}
+\item \texttt{other(0,2)} = \texttt{mod(4,3)} = 1
+\item \texttt{other(0,1)} = \texttt{mod(2,3)} = 2
+\item \texttt{other(1,2)} = \texttt{mod(6,3)} = 0
+\end{itemize}
+
+The complete trace is:
+
+\begin{verbatim}
+hanoi 5 0 2  
+	hanoi 4 0 1 
+		hanoi 3 0 2
+			hanoi 2 0 1 
+				hanoi 1 0 2 = move 0 2 
+				move  0 1
+				hanoi 1 2 1 = move 2 1 
+			move 0 2  
+			hanoi 2 1 2  
+				hanoi 1 1 0 = move 1 0  
+				move  1 2  
+				hanoi 1 0 2 = move 0 2 
+		move 0 1
+		hanoi 3 2 1
+			hanoi 2 2 0
+				hanoi 1 2 1 = move 2 1
+				move 2 0
+				hanoi 1 1 0 = move 1 0
+			move 2 1
+			hanoi 2 0 1
+				hanoi 1 0 2 = move 0 2
+				move 0 1
+				hanoi 1 2 1 = move 2 1
+	move 0 2
+	hanoi 4 1 2
+		hanoi 3 1 0
+			hanoi 2 1 2
+				hanoi 1 1 0 = move 1 0
+				move 1 2
+				hanoi 1 0 2 = move 0 2
+			move 1 0
+			hanoi 2 2 0
+				hanoi 1 2 1 = move 2 1
+				move 2 0
+				hanoi 1 1 0 = move 1 0
+		move 1 2
+		hanoi 3 0 2
+			hanoi 2 0 1
+				hanoi 1 0 2 = move 0 2
+				move 0 1
+				hanoi 1 2 1 = move 2 1
+			move 0 2
+			hanoi 2 1 2
+				hanoi 1 1 0 = move 1 0
+				move 1 2
+				hanoi 1 0 2 = move 0 2
+\end{verbatim}
+
+\subsection{Extracted Move Sequence}
+
+From the execution trace, we extract the sequence of moves in order:
+
+\begin{verbatim}
+move 0 2
+move 0 1
+move 2 1
+move 0 2
+move 1 0
+move 1 2
+move 0 2
+move 0 1
+move 2 1
+move 2 0
+move 1 0
+move 2 1
+move 0 2
+move 0 1
+move 2 1
+move 0 2
+move 1 0
+move 1 2
+move 0 2
+move 1 0
+move 2 0
+move 1 0
+move 1 2
+move 0 2
+move 0 1
+move 2 1
+move 0 2
+move 1 0
+move 1 2
+move 0 2
+\end{verbatim}
+
+This sequence of 31 moves successfully transfers all 5 disks from peg 0 to peg 2, following the rules of the puzzle.
+
+\subsection{Analysis of Function Calls}
+
+\subsubsection{Counting \texttt{hanoi} Appearances}
+
+To count how many times \texttt{hanoi} appears in the computation, we analyze the recursive structure. For \texttt{hanoi } $n$, the number of \texttt{hanoi} calls follows a recurrence relation:
+
+Let $H(n)$ be the number of times \texttt{hanoi} appears (including the initial call) for $n$ disks. From the recursive definition:
+\begin{align}
+H(1) &= 1 \\
+H(n+1) &= 1 + 2H(n)
+\end{align}
+
+The initial call counts as 1, and each recursive case makes 2 recursive calls to \texttt{hanoi } $n$.
+
+Solving this recurrence:
+\begin{align}
+H(1) &= 1 \\
+H(2) &= 1 + 2(1) = 3 \\
+H(3) &= 1 + 2(3) = 7 \\
+H(4) &= 1 + 2(7) = 15 \\
+H(5) &= 1 + 2(15) = 31
+\end{align}
+
+We observe that $H(n) = 2^n - 1$.
+
+\subsubsection{Proof of the Formula}
+
+We prove by induction that $H(n) = 2^n - 1$ for all $n \geq 1$.
+
+\textbf{Base Case:} $H(1) = 1 = 2^1 - 1$ ✓
+
+\textbf{Inductive Step:} Assume $H(k) = 2^k - 1$ for some $k \geq 1$. Then:
+\begin{align}
+H(k+1) &= 1 + 2H(k) \\
+&= 1 + 2(2^k - 1) \\
+&= 1 + 2^{k+1} - 2 \\
+&= 2^{k+1} - 1
+\end{align}
+
+Therefore, $H(n) = 2^n - 1$ for all $n \geq 1$.
+
+For \texttt{hanoi 5 0 2}, the number of \texttt{hanoi} calls is $2^5 - 1 = 31$.
+
+\subsection{Stack Machine vs Rewriting Machine}
+
+The execution trace demonstrates two different computational models:
+
+\subsubsection{Stack Machine Model}
+
+The indented trace shows the stack-based execution, where each level of indentation represents a new stack frame. The computation proceeds by:
+\begin{itemize}
+\item Pushing new frames onto the stack (moving right with indentation)
+\item Executing operations (move commands)
+\item Popping frames from the stack (returning to previous indentation levels)
+\end{itemize}
+
+Time flows vertically downward, while the program logic moves horizontally as the stack grows and shrinks.
+
+\subsubsection{Rewriting Machine Model}
+
+The rewriting machine model uses semicolons to represent sequential composition and rewrites equations by replacing equals with equals. The same computation can be written as:
+
+\begin{verbatim}
+hanoi 5 0 2 = 
+(hanoi 4 0 1; move 0 1; hanoi 4 1 2) = 
+((hanoi 3 0 2; move 0 2; hanoi 3 2 1); move 0 1; hanoi 4 1 2) = 
+(((hanoi 2 0 1; move 0 1; hanoi 2 1 2); move 0 2; hanoi 3 2 1); move 0 1; hanoi 4 1 2) = 
+((((hanoi 1 0 2; move 0 2; hanoi 1 2 1); move 0 1; hanoi 2 1 2); move 0 2; hanoi 3 2 1); move 0 1; hanoi 4 1 2) = 
+((((move 0 2; move 0 1; move 2 1); move 0 2; hanoi 2 1 2); move 0 1; hanoi 3 2 1); move 0 1; hanoi 4 1 2) = 
+...
+\end{verbatim}
+
+The levels of indentation in the stack machine correspond to the nesting depth of parentheses in the rewriting machine. Both traverse the same call tree, but represent it differently: the stack machine uses spatial indentation to show the call stack, while the rewriting machine encodes the stack structure in the nested parentheses of the expression being rewritten.
+
+\subsection{Recursion vs Iteration}
+
+The Towers of Hanoi problem can be solved iteratively using a single while loop, though the iterative solution is more complex and less intuitive. The key insight is that the recursive solution naturally follows the divide-and-conquer strategy:
+
+\begin{itemize}
+\item \textbf{Divide:} Move the top $n$ disks to the intermediate peg
+\item \textbf{Conquer:} Move the largest disk to the destination
+\item \textbf{Combine:} Move the $n$ disks from the intermediate peg to the destination
+\end{itemize}
+
+Both recursive and iterative solutions have the same time complexity $O(2^n)$, as they both require $2^n - 1$ moves. However, the recursive solution is more elegant and easier to understand because it directly expresses the problem's recursive structure.
+
+The translation from recursion to iteration is always possible using an explicit stack to simulate the call stack. The converse (iteration to recursion) is also possible, as any iterative algorithm can be transformed into tail-recursive form, though this may require accumulator parameters.
+
+\subsection{Discord Question}
+
+\textbf{Question:} In the Towers of Hanoi algorithm, we saw that the number of \texttt{hanoi} function calls is $2^n - 1$ for $n$ disks. This exponential growth means that for large $n$, the recursive solution becomes impractical. However, the number of actual disk moves is also $2^n - 1$, which is optimal. Is there a way to reduce the number of function calls while maintaining the optimal number of moves? Could we use memoization or dynamic programming techniques, or is the exponential number of calls inherent to the recursive structure of the problem?
+
+\textbf{Context:} This question explores the relationship between algorithm structure and computational overhead. While the recursive solution is elegant and produces the optimal sequence of moves, it incurs significant overhead from function calls. Understanding whether this overhead can be reduced while maintaining the algorithm's clarity helps illuminate the trade-offs between different computational models and optimization techniques.
+
 \section{Natural Number Game: Formal Verification with Lean}
 
 The Natural Number Game (NNG) provides an interactive introduction to formal verification using the Lean theorem prover. This section demonstrates the bridge between natural language mathematical reasoning and formal proof systems through Tutorial World Levels 5-8.
@@ -1020,6 +1237,8 @@ Lambda calculus in Weeks 4-6 represented a fundamental shift toward functional p
 
 Parsing theory in Week 7 connected theoretical concepts to practical compiler implementation. Understanding how grammar design affects expression interpretation, how precedence and associativity eliminate ambiguity, and how derivation trees represent the parsing process provided crucial insight into how programming languages are processed by compilers.
 
+Towers of Hanoi in Week 12 provided a concrete example of recursive problem-solving and the relationship between different computational models. Completing the execution trace for \texttt{hanoi 5 0 2} and analyzing the exponential growth of function calls ($2^n - 1$) demonstrated how recursive algorithms naturally express divide-and-conquer strategies. The comparison between stack machine and rewriting machine models showed how the same computation can be represented in different ways, with indentation in the stack model corresponding to nested parentheses in the rewriting model. This exercise highlighted the elegance of recursive solutions while also revealing their computational overhead.
+
 The Natural Number Game section demonstrated the power of formal verification systems like Lean. Working through the Lean proofs for basic arithmetic theorems showed how formal proof tactics can capture the essence of mathematical reasoning while maintaining computational rigor. The detailed natural language proof for Level 5 ($b + 0 = b$) illustrated how each Lean tactic corresponds to a specific step in mathematical reasoning, bridging the gap between informal mathematical intuition and formal proof systems.
 
 Throughout this journey, several key insights emerged:
@@ -1048,6 +1267,7 @@ I completed all seven weeks of assignments, demonstrating comprehensive engageme
 \item \textbf{Week 5:} Advanced lambda calculus including Church numerals, booleans, and the Y combinator
 \item \textbf{Week 6:} Advanced lambda calculus with Church numerals, boolean operations, and fixed point combinators
 \item \textbf{Week 7:} Parsing theory with derivation tree construction, ambiguity analysis, and context-free grammar analysis
+\item \textbf{Week 12:} Towers of Hanoi with complete recursive execution trace for \texttt{hanoi 5 0 2}, analysis of function call complexity ($2^n - 1$), comparison of stack machine vs rewriting machine models, and proof of the recurrence relation
 \item \textbf{Natural Number Game:} Lean proof solutions for Tutorial World Levels 5-8 with detailed natural language proof for Level 5
 \item \textbf{Lean Logic Game:} Single-line solutions for implication tutorial levels 6-9 in the ``Party Snacks'' tutorial and negation tutorial levels 9-12, demonstrating constructive logic and the Curry-Howard correspondence
 \end{itemize}
@@ -1064,7 +1284,7 @@ The solutions demonstrate active engagement with formal systems, mathematical re
 
 \section{Conclusion}\label{conclusion}
 
-This comprehensive study of programming language theory has provided invaluable insight into the mathematical foundations of computation. The seven weeks of assignments have demonstrated how:
+This comprehensive study of programming language theory has provided invaluable insight into the mathematical foundations of computation. The assignments have demonstrated how:
 
 \begin{itemize}
 \item Formal systems provide powerful frameworks for reasoning about computation
