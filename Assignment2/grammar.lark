@@ -1,0 +1,22 @@
+start: exp
+
+?exp: application
+    | atom
+
+?atom: abstraction
+    | variable
+    | "(" exp ")"
+
+application: exp atom
+
+abstraction: "\\" variable "." exp
+    | "λ" variable "." exp
+
+variable: VAR
+
+VAR: /[a-z][a-z0-9]*/
+
+%ignore " "
+%ignore "\t"
+%ignore "\n"
+
