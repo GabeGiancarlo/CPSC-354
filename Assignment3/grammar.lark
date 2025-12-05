@@ -1,0 +1,45 @@
+start: exp
+
+// Comments
+COMMENT: "//" /[^\n]/*
+%ignore COMMENT
+
+// Whitespace
+%ignore " "
+%ignore "\t"
+%ignore "\n"
+
+// Expression hierarchy with proper precedence
+// Application binds tightest, then unary negation, then multiplication, then addition/subtraction
+?exp: addsub
+
+?addsub: addsub "+" muldiv -> plus
+      | addsub "-" muldiv -> minus
+      | muldiv
+
+?muldiv: muldiv "*" unary -> times
+       | muldiv "/" unary -> div
+       | unary
+
+?unary: NEG unary -> neg
+      | application
+
+?application: application atom
+            | atom
+
+?atom: abstraction
+     | number
+     | variable
+     | "(" exp ")"
+
+abstraction: "\\" NAME "." exp
+           | "λ" NAME "." exp
+
+number: NUMBER
+
+variable: NAME
+
+// Tokens
+NAME: /[a-z][a-z0-9]*/
+NUMBER: /[0-9]+(\.[0-9]+)?/
+NEG: "-"
