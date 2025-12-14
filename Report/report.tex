@@ -73,7 +73,7 @@ This comprehensive report documents my work throughout CPSC-354 Programming Lang
 
 \section{Introduction}\label{intro}
 
-This report consolidates my work from CPSC-354 Programming Languages course, covering seven weeks of assignments that explore the mathematical foundations of programming languages. The course progression takes us from basic formal systems through advanced functional programming concepts, demonstrating how theoretical computer science principles underpin practical programming language design and implementation.
+This report consolidates my work from CPSC-354 Programming Languages course, covering thirteen weeks of assignments that explore the mathematical foundations of programming languages. The course progression takes us from basic formal systems through advanced functional programming concepts, demonstrating how theoretical computer science principles underpin practical programming language design and implementation.
 
 The assignments cover:
 \begin{itemize}
@@ -84,9 +84,12 @@ The assignments cover:
 \item \textbf{Week 5:} Lambda Calculus Workout - Advanced function composition
 \item \textbf{Week 6:} Advanced Lambda Calculus - Church numerals, booleans, and recursion
 \item \textbf{Week 7:} Parsing and Context-Free Grammars - Syntax analysis and compiler theory
-\item \textbf{Natural Number Game:} Formal verification with Lean - Bridge between natural language and formal proof systems
-\item \textbf{Lean Logic Game:} Propositional logic with Lean - Implication and negation tutorials demonstrating constructive logic and proof terms
+\item \textbf{Week 8:} Natural Number Game Tutorial World - Formal verification with Lean, levels 5-8
+\item \textbf{Week 9:} Natural Number Game Addition World - Associativity proofs with and without induction
+\item \textbf{Week 10:} Lean Logic Game Implication Tutorial - Party Snacks levels 6-9
+\item \textbf{Week 11:} Lean Logic Game Negation Tutorial - Levels 9-12
 \item \textbf{Week 12:} Towers of Hanoi - Recursive algorithms, execution traces, and the relationship between stack machines and rewriting machines
+\item \textbf{Week 13:} Lambda Calculus in Python - Implementation, debugging, and trace analysis
 \end{itemize}
 
 Each assignment builds upon previous concepts, creating a comprehensive understanding of programming language theory from mathematical foundations to practical implementation concerns. The Natural Number Game section demonstrates how formal verification systems can capture mathematical reasoning while maintaining computational rigor. The Lean Logic Game sections explore propositional logic through the lens of constructive mathematics, where proofs are programs and implications are functions, and negation is defined as implication to False.
@@ -242,6 +245,8 @@ The rewrite rules are:
 
 \subsection{Week 3: Termination Analysis}
 
+Termination analysis is a fundamental technique for proving that algorithms always halt. This week's homework focused on using measure functions to prove termination, demonstrating how mathematical properties can guarantee that algorithms complete in finite time.
+
 \subsubsection{Problem 4.1: Euclidean Algorithm}
 
 Consider the following algorithm:
@@ -258,7 +263,35 @@ Under certain conditions (which?) this algorithm always terminates.
 
 Find a measure function and prove termination.
 
-\textbf{Solution:} The algorithm terminates when $a$ and $b$ are non-negative integers. The measure function is $\varphi(a,b) = b$. Since $a \bmod b < b$ when $b \neq 0$, the value of $b$ strictly decreases with each iteration, ensuring termination.
+\subsubsection{Solution: Euclidean Algorithm}
+
+\textbf{Conditions for Termination:} The algorithm terminates when $a$ and $b$ are non-negative integers, with at least one of them positive. If both are zero, the algorithm would loop indefinitely, but this case is typically excluded by the problem specification.
+
+\textbf{Measure Function:} We choose $\varphi(a,b) = b$ as our measure function. This function maps the algorithm's state to a natural number.
+
+\textbf{Proof of Termination:}
+
+To prove termination, we must show that:
+\begin{enumerate}
+\item The measure function maps to a well-ordered set (natural numbers with the standard ordering).
+\item The measure function strictly decreases with each iteration.
+\end{enumerate}
+
+For the Euclidean algorithm:
+\begin{itemize}
+\item The measure function $\varphi(a,b) = b$ maps to $\mathbb{N}$, which is well-ordered.
+\item In each iteration, we have $b' = a \bmod b$. By the properties of modular arithmetic, when $b \neq 0$, we have $0 \leq a \bmod b < b$. Therefore, $b' = a \bmod b < b$, which means $\varphi(a',b') = b' < b = \varphi(a,b)$.
+\end{itemize}
+
+Since $b$ is a natural number and strictly decreases with each iteration, and natural numbers are bounded below by 0, the algorithm must eventually reach a state where $b = 0$, at which point the loop terminates.
+
+\textbf{Alternative Measure Functions:} While $\varphi(a,b) = b$ is the most natural choice, other measure functions could work:
+\begin{itemize}
+\item $\varphi(a,b) = a + b$: This also decreases since $a' + b' = b + (a \bmod b) < a + b$ when $b \neq 0$ (because $a \bmod b < b$ and $b \leq a$ in typical cases).
+\item $\varphi(a,b) = \max(a,b)$: This decreases because after swapping, we have $\max(b, a \bmod b) < \max(a,b)$ when $b \neq 0$.
+\end{itemize}
+
+However, $\varphi(a,b) = b$ is the simplest and most direct measure function, making it the preferred choice.
 
 \subsubsection{Problem 4.2: Merge Sort}
 
@@ -280,13 +313,68 @@ Prove that
 \]
 is a measure function for \texttt{merge\_sort}.
 
-\textbf{Solution:} The measure function $\varphi(left, right) = right - left + 1$ represents the size of the subarray being sorted. Each recursive call operates on a strictly smaller subarray, so the measure decreases with each recursive call, ensuring termination.
+\subsubsection{Solution: Merge Sort}
+
+\textbf{Understanding the Measure Function:} The measure function $\varphi(left, right) = right - left + 1$ represents the size of the subarray being sorted. When $left = right$, the subarray has size 1, and when $left < right$, the size is $right - left + 1$.
+
+\textbf{Proof of Termination:}
+
+We must show that:
+\begin{enumerate}
+\item The measure function maps to a well-ordered set.
+\item Each recursive call operates on a subarray with a strictly smaller measure.
+\end{enumerate}
+
+For merge sort:
+\begin{itemize}
+\item The measure function $\varphi(left, right) = right - left + 1$ maps to $\mathbb{N}$ (since $left \leq right$ by the base case condition), which is well-ordered.
+\item The algorithm makes two recursive calls:
+  \begin{itemize}
+  \item \texttt{merge\_sort(arr, left, mid)}: The size of this subarray is $\varphi(left, mid) = mid - left + 1$.
+  \item \texttt{merge\_sort(arr, mid+1, right)}: The size of this subarray is $\varphi(mid+1, right) = right - (mid+1) + 1 = right - mid$.
+  \end{itemize}
+  
+  Since $mid = \lfloor (left + right) / 2 \rfloor$ and $left < right$ (otherwise we would have returned), we have:
+  \begin{align}
+  mid - left + 1 &< right - left + 1 \quad \text{(because $mid < right$)} \\
+  right - mid &< right - left + 1 \quad \text{(because $mid \geq left$)}
+  \end{align}
+  
+  Therefore, both recursive calls operate on subarrays with strictly smaller measure than the original call.
+\end{itemize}
+
+Since the measure function is a natural number that strictly decreases with each recursive call, and natural numbers are bounded below by 0, the recursion must eventually reach the base case where $left \geq right$, ensuring termination.
+
+\textbf{Key Insight:} The termination of merge sort follows directly from the fact that we divide the problem in half at each step. The measure function captures this division by measuring the size of the subproblem, which must eventually reach size 1 or 0.
+
+\subsubsection{General Principles of Termination Analysis}
+
+From these examples, we can extract general principles for proving termination:
+
+\begin{enumerate}
+\item \textbf{Choose a natural measure:} The measure function should naturally correspond to some aspect of the problem that decreases (array size, value of a variable, depth of recursion, etc.).
+
+\item \textbf{Well-ordered codomain:} The measure function must map to a well-ordered set (typically natural numbers) to guarantee that decreasing sequences must eventually terminate.
+
+\item \textbf{Strict decrease:} The measure must strictly decrease with each iteration or recursive call. A non-strict decrease (allowing equality) is not sufficient.
+
+\item \textbf{Base case reachability:} The algorithm must have a base case that is reached when the measure reaches its minimum value.
+\end{enumerate}
 
 \subsubsection{Discord Question}
 
 \textbf{Question:} When proving termination using measure functions, how do we know if we've chosen the ``best'' measure function? For the Euclidean algorithm, we used $\varphi(a,b) = b$, but could we have used something like $\varphi(a,b) = a + b$ or $\max(a,b)$? What makes a measure function effective?
 
 \textbf{Context:} This question explores the art of choosing measure functions. While multiple measure functions may work, some are more natural or easier to work with. Understanding the trade-offs helps develop better intuition for termination proofs.
+
+\textbf{Answer:} The ``best'' measure function is typically the simplest one that clearly demonstrates termination. For the Euclidean algorithm, $\varphi(a,b) = b$ is preferred because:
+\begin{itemize}
+\item It directly captures what decreases: the value of $b$ in each iteration.
+\item It requires minimal mathematical reasoning: we only need the property that $a \bmod b < b$.
+\item It's immediately clear why termination occurs: $b$ is a natural number that decreases toward 0.
+\end{itemize}
+
+While $\varphi(a,b) = a + b$ or $\max(a,b)$ would also work, they require more complex reasoning to show they decrease, making the proof less clear. The effectiveness of a measure function is determined by how directly it captures the decreasing property and how easily we can prove that it decreases.
 
 \subsection{Week 4: Lambda Calculus}
 
@@ -915,7 +1003,74 @@ The translation from recursion to iteration is always possible using an explicit
 
 \textbf{Context:} This question explores the relationship between algorithm structure and computational overhead. While the recursive solution is elegant and produces the optimal sequence of moves, it incurs significant overhead from function calls. Understanding whether this overhead can be reduced while maintaining the algorithm's clarity helps illuminate the trade-offs between different computational models and optimization techniques.
 
-\section{Natural Number Game: Formal Verification with Lean}
+\section{Week 13: Lambda Calculus in Python}
+
+Work through Items 2-8 from the Lambda Calculus in Python assignment (\href{https://hackmd.io/@alexhkurz/B1FMhwc1bg}{HackMD link}). This homework focuses on working with a Python implementation of lambda calculus (lambdaC-2024), following the mathematical specification from the course materials.
+
+\subsection{Testing the Interpreter}
+
+\textbf{Item 2:} Run \texttt{python interpreter\_test.py} to verify that the Python implementation of lambda calculus conforms to its mathematical specification.
+
+\textbf{Item 3:} Add lambda expressions from the lectures on Lambda Calculus and Church Encodings to \texttt{test.lc} and run the interpreter with \texttt{python interpreter.py test.lc}. Always formulate an expected result before executing a test.
+
+For example:
+\begin{itemize}
+\item \texttt{a b c d} reduces to \texttt{(((a b) c) d)} because application is left-associative.
+\item \texttt{(a)} reduces to \texttt{a} because parentheses are used for grouping and don't change the meaning of a single variable.
+\end{itemize}
+
+From Week 5, we remember that \texttt{(\textbackslash f.\textbackslash x.f(f(x))) (\textbackslash f.\textbackslash x.(f(f(f x))))} should evaluate to the Church numeral for 6 (applying a function twice, then applying it three times, results in applying it $2 \times 3 = 6$ times).
+
+\subsection{Capture-Avoiding Substitution}
+
+\textbf{Item 4:} Investigate how capture-avoiding substitution works by making relevant test cases and examining the source code.
+
+Capture-avoiding substitution is crucial for correctly implementing beta-reduction. When substituting a term $N$ for a variable $x$ in $\lambda y.M$, we must ensure that free variables in $N$ don't become bound. The implementation uses fresh variable generation to avoid variable capture.
+
+\textbf{Key observations:}
+\begin{itemize}
+\item The \texttt{substitute()} function checks for free variables and generates fresh variable names when necessary.
+\item Variable renaming ensures that bound variables don't conflict with free variables in the argument.
+\item This implementation detail is what makes the mathematical specification of lambda calculus executable in Python.
+\end{itemize}
+
+\textbf{Item 5:} Not all computations reduce to normal form. Some lambda expressions may not have a normal form (like those involving the Y combinator with certain arguments), while others may require careful handling of variable capture to reduce correctly.
+
+\subsection{Minimal Working Example}
+
+\textbf{Item 6:} Find the smallest $\lambda$-expression (minimal working example, MWE) that does not reduce to normal form.
+
+One example is an expression that requires infinite reduction, such as $(\lambda x.x x)(\lambda x.x x)$, which reduces to itself and thus never reaches normal form. However, the interpreter may handle this differently depending on its evaluation strategy.
+
+\subsection{Using the Debugger to Trace Executions}
+
+\textbf{Item 7:} Use the Python debugger in VSCode to step through the interpreter. Set breakpoints, use "Step Over", "Step Into", and "Continue" buttons, watch the call stack, and use the debug console to inspect variables.
+
+\textbf{Item 8:} Trace the evaluation of \texttt{((\textbackslash m.\textbackslash n. m n) (\textbackslash f.\textbackslash x. f (f x))) (\textbackslash f.\textbackslash x. f (f (f x)))}.
+
+Following the steps taken by \texttt{interpreter.py}, with each substitution on a new line:
+
+\begin{verbatim}
+((\m.\n. m n) (\f.\x. f (f x))) (\f.\x. f (f (f x)))
+((\Var1. (\f.\x. f (f x)) Var1)) (\f.\x. f (f (f x)))
+...
+\end{verbatim}
+
+The debugger reveals how the interpreter performs capture-avoiding substitution, renaming variables to avoid conflicts and applying beta-reduction step by step.
+
+\textbf{Item 9:} Create a recursive trace for \texttt{((\textbackslash m.\textbackslash n. m n) (\textbackslash f.\textbackslash x. f (f x))) (\textbackslash f.\textbackslash x. f x)} in the format used for Towers of Hanoi, showing calls to \texttt{evaluate()} and \texttt{substitute()} with line numbers and proper indentation reflecting the call stack.
+
+\subsection{Modifying the Interpreter}
+
+\textbf{Item 10:} Modify \texttt{interpreter.py} to handle edge cases and ensure it works correctly on the MWE and other test cases identified during testing.
+
+\subsection{Discord Question}
+
+\textbf{Question:} [To be added]
+
+\subsection{Week 8: Natural Number Game - Tutorial World}
+
+The goal of this homework was to draw a bridge between natural language and formal or programming language math proofs. Here, we take "natural language" as opposed to "formal language". A natural language proof still typically involves some degree of formalism (like variables, equations, logical notation...) but the surrounding language is English rather than a formal or programming language.
 
 The Natural Number Game (NNG) provides an interactive introduction to formal verification using the Lean theorem prover. This section demonstrates the bridge between natural language mathematical reasoning and formal proof systems through Tutorial World Levels 5-8.
 
@@ -975,7 +1130,13 @@ rfl
 
 This proof demonstrates the equality $2 + 2 = 4$ by systematically expanding each number using successor notation and applying the addition rules step by step.
 
-\subsection{Level 5: Addition World - Associativity of Addition}
+\section{Week 9: Natural Number Game - Addition World}
+
+If you haven't done so in class, work through addition world.
+
+For Level 5 of addition world, put two solutions into your report: one that uses induction and another one that does not use induction. For both your solutions, give the corresponding math pen-and-paper proof in your report.
+
+\subsubsection{Level 5: Addition World - Associativity of Addition}
 
 \textbf{Problem Statement:} Prove that addition is associative, i.e., for all natural numbers $a$, $b$, and $c$:
 $$a + (b + c) = (a + b) + c$$
@@ -1087,9 +1248,13 @@ The step-by-step nature of the Lean proof makes each logical step explicit and v
 
 \textbf{Context:} This question explores the relationship between inductive and direct proof strategies. Understanding when each approach is most natural helps develop better proof-writing intuition and reveals the deep connections between recursive definitions and inductive reasoning.
 
-\section{Lean Logic Game: Implication Tutorial}
+\section{Week 10: Lean Logic Game - Implication Tutorial}
 
-The Lean Logic Game (available at \href{https://adam.math.hhu.de/\#/g/trequetrum/lean4game-logic}{adam.math.hhu.de}) provides an interactive introduction to propositional logic using the Lean 4 Game Engine. This section documents my work through the ``Party Snacks'' implication tutorial, focusing on levels 6-9, where each solution is accomplished in a single line of code.
+In the Lean Logic Game (\href{https://adam.math.hhu.de/\#/g/trequetrum/lean4game-logic}{adam.math.hhu.de}) work through the implication tutorial ("party snacks").
+
+Put the solutions to levels 6-9 in your report. Solve each of these levels in just a single line of code.
+
+The Lean Logic Game provides an interactive introduction to propositional logic using the Lean 4 Game Engine. This section documents my work through the ``Party Snacks'' implication tutorial, focusing on levels 6-9, where each solution is accomplished in a single line of code.
 
 \subsection{Overview}
 
@@ -1155,7 +1320,9 @@ The ability to solve these levels in single lines of code reflects the elegance 
 
 \textbf{Context:} This question explores whether there are alternative proof styles for handling long chains of implications. The nested function application pattern `h₃ (h₂ (h₁ h₄))` directly mirrors the logical structure but can become difficult to read with more complex implication chains. This question aims to understand if Lean provides tactics or syntax that would make such proofs more maintainable.
 
-\section{Lean Logic Game: Negation Tutorial}
+\section{Week 11: Lean Logic Game - Negation Tutorial}
+
+Finish the Lean Logic Negation Tutorial and put the solutions of levels 9-12 in your report. Every solution should be just one line.
 
 The Lean Logic Game's Negation Tutorial continues our exploration of propositional logic by introducing negation ($\neg$). In constructive logic, negation is defined as $\neg P = P \to \text{False}$, meaning that to prove $\neg P$, we must show that assuming $P$ leads to a contradiction. This section documents my work through levels 9-12 of the negation tutorial, where each solution is accomplished in a single line of code.
 
@@ -1225,92 +1392,117 @@ The single-line solutions in this tutorial demonstrate how negation proofs can b
 
 \section{Essay}
 
-Working through these seven weeks of programming language theory assignments has been both challenging and rewarding. The progression from basic formal systems through advanced functional programming concepts has provided a comprehensive understanding of the mathematical foundations underlying programming languages.
+\subsection{Synthesis: The Mathematical Foundations of Programming Languages}
 
-The journey began with the MU puzzle, which introduced the power of invariants in formal systems. This seemingly simple string transformation problem demonstrated how mathematical properties can be used to prove impossibility results, a concept that would prove crucial throughout the course. The realization that certain properties remain unchanged under transformation rules provides a powerful method for proving properties about algorithms and systems.
+Throughout this course, I have explored the deep mathematical structures that underpin programming languages, discovering that computation itself is fundamentally a mathematical phenomenon. This synthesis reflects on how the theoretical foundations we studied connect to form a coherent understanding of programming language design and implementation.
 
-String rewriting systems in Week 2 built upon this foundation, showing how abstract reduction systems can implement complex algorithms through simple transformation rules. The parity computation exercise was particularly enlightening, as it demonstrated how invariants can characterize equivalence classes and provide abstract specifications of algorithm behavior. This connection between implementation details and mathematical properties would become a recurring theme.
+\subsubsection{The Power of Invariants and Formal Systems}
 
-Termination analysis in Week 3 introduced measure functions as a tool for proving algorithm correctness. The Euclidean algorithm example showed how the mathematical properties of operations (modular arithmetic) can directly provide termination guarantees. The merge sort example demonstrated how divide-and-conquer algorithms naturally provide their own termination guarantees through the shrinking of problem size.
+The course began with formal systems and invariants, concepts that proved to be unifying themes throughout all subsequent material. The MU puzzle demonstrated that impossibility proofs require identifying properties that remain invariant under transformation rules. This principle reappeared in string rewriting systems, where invariants characterized equivalence classes and provided abstract specifications. 
 
-Lambda calculus in Weeks 4-6 represented a fundamental shift toward functional programming foundations. The initial workout problems established fluency with beta-reduction and function composition. Church numerals and booleans showed how data structures can be elegantly represented as functions, while the Y combinator demonstrated how recursion can be expressed without explicit recursive syntax. These concepts revealed the universality of lambda calculus and its power to represent any computable function.
+In Week 3's termination analysis, measure functions served as invariants that decrease with each step, guaranteeing termination. Working through the Euclidean algorithm and merge sort examples, I learned that choosing the right measure function—one that naturally captures what decreases in the computation—is crucial for proving termination. For the Euclidean algorithm, the measure function $\varphi(a,b) = b$ directly captures that $b$ decreases with each iteration, while for merge sort, $\varphi(left, right) = right - left + 1$ captures that the subproblem size decreases. These exercises demonstrated that \textbf{termination proofs require identifying a well-ordered measure that strictly decreases}, providing a concrete method for proving that algorithms always halt.
 
-Parsing theory in Week 7 connected theoretical concepts to practical compiler implementation. Understanding how grammar design affects expression interpretation, how precedence and associativity eliminate ambiguity, and how derivation trees represent the parsing process provided crucial insight into how programming languages are processed by compilers.
+Even in lambda calculus, the Church-Rosser property ensures that reduction order doesn't affect the final result—another form of invariance.
 
-Towers of Hanoi in Week 12 provided a concrete example of recursive problem-solving and the relationship between different computational models. Completing the execution trace for \texttt{hanoi 5 0 2} and analyzing the exponential growth of function calls ($2^n - 1$) demonstrated how recursive algorithms naturally express divide-and-conquer strategies. The comparison between stack machine and rewriting machine models showed how the same computation can be represented in different ways, with indentation in the stack model corresponding to nested parentheses in the rewriting model. This exercise highlighted the elegance of recursive solutions while also revealing their computational overhead.
+This pattern reveals a fundamental principle: \textbf{mathematical invariants are the bridge between implementation and specification}. When we can identify what remains unchanged, we can reason about what is possible or impossible, what will terminate, and what the result will be, regardless of implementation details.
 
-The Natural Number Game section demonstrated the power of formal verification systems like Lean. Working through the Lean proofs for basic arithmetic theorems showed how formal proof tactics can capture the essence of mathematical reasoning while maintaining computational rigor. The detailed natural language proof for Level 5 ($b + 0 = b$) illustrated how each Lean tactic corresponds to a specific step in mathematical reasoning, bridging the gap between informal mathematical intuition and formal proof systems.
+\subsubsection{Lambda Calculus as Universal Foundation}
 
-Throughout this journey, several key insights emerged:
+Lambda calculus emerged as the theoretical foundation that unifies all computation. Through Church numerals, we saw how data can be encoded as functions. Through Church booleans, we saw how control flow can be encoded as functions. Through the Y combinator, we saw how recursion can be encoded as functions. This universality—the fact that lambda calculus can represent any computable function—reveals that computation is fundamentally about function application and abstraction.
 
-\begin{itemize}
-\item \textbf{Mathematical rigor:} Formal systems provide powerful tools for reasoning about computation
-\item \textbf{Invariants:} Properties that remain unchanged under transformations are crucial for proving correctness
-\item \textbf{Abstraction:} The ability to separate implementation from specification enables clear thinking about algorithms
-\item \textbf{Universality:} Simple formal systems can express complex computations
-\item \textbf{Practical connections:} Theoretical concepts directly inform practical programming language design
-\end{itemize}
+The Curry-Howard correspondence, explored through the Lean Logic Game, deepened this understanding: \textbf{proofs are programs, and programs are proofs}. This correspondence shows that the same mathematical structures underlie both computation and logical reasoning. When we write a function in a typed functional language, we are simultaneously constructing a proof that the function's type is inhabited.
 
-The most fascinating aspect was seeing how seemingly simple mathematical concepts can provide deep insights into computation. From the impossibility of deriving MU from MI to the universality of lambda calculus, each assignment revealed new layers of understanding about the nature of computation and programming languages.
+\subsubsection{From Syntax to Semantics: The Parsing Connection}
 
-These exercises have fundamentally changed how I think about programming. The mathematical rigor required to solve these problems has improved my ability to reason formally about computational problems and to construct precise arguments about what is and isn't possible within a given system. This foundation will be invaluable as I continue to study computer science and work with different programming paradigms.
+Parsing theory connected the concrete (strings of characters) to the abstract (syntax trees). This connection is crucial because it shows how human-readable syntax maps to machine-processable structures. The ambiguity problems we encountered—multiple parse trees for the same string—revealed that syntax alone is insufficient; we need precedence and associativity rules to disambiguate. This taught me that \textbf{language design requires careful consideration of both syntax and semantics}, and that the mathematical structure of grammars directly impacts how programmers write code.
+
+\subsubsection{Formal Verification: Bridging Theory and Practice}
+
+The Natural Number Game and Lean Logic Game demonstrated how formal verification systems can mechanize mathematical reasoning. Working through proofs in Lean showed that the gap between informal mathematical intuition and formal proof systems is bridgeable through careful use of tactics and proof terms. The constructive logic perspective—where proofs are programs—made the Curry-Howard correspondence tangible. This experience revealed that \textbf{formal verification is not just a theoretical exercise but a practical tool} for ensuring program correctness.
+
+\subsubsection{Recursive Structures and Computational Models}
+
+Towers of Hanoi illustrated how recursive algorithms naturally express divide-and-conquer strategies. The comparison between stack machine and rewriting machine models showed that the same computation can be represented in fundamentally different ways—one using spatial indentation (the stack), the other using nested parentheses (the expression). This duality revealed that \textbf{computational models are representations of the same underlying mathematical structure}, and choosing a model is about finding the right abstraction for the problem at hand.
+
+\subsubsection{Synthesis: The Unified View}
+
+These diverse topics—formal systems, lambda calculus, parsing, verification—are not isolated subjects but interconnected facets of a unified mathematical framework for understanding computation. Invariants provide the tools for reasoning about correctness. Lambda calculus provides the universal language for expressing computation. Parsing provides the bridge from human syntax to mathematical structures. Formal verification provides the tools for mechanizing reasoning about these structures.
+
+The most profound insight is that \textbf{programming languages are mathematical objects}, and understanding their mathematical foundations is essential for both using them effectively and designing new ones. The theoretical concepts we studied are not abstract curiosities but practical tools that inform every aspect of software development, from algorithm design to compiler construction to program verification.
+
+This course has fundamentally changed my perspective on programming. I now see code not just as instructions for a computer, but as mathematical expressions that can be reasoned about, transformed, and verified. This mathematical lens provides powerful tools for understanding what programs do, proving they are correct, and designing languages that make correct programs easier to write.
 
 \section{Evidence of Participation}
 
-I completed all seven weeks of assignments, demonstrating comprehensive engagement with the material:
+I was an active and engaged member of the class throughout the semester. During class sessions, I consistently attempted problems and engaged with the material, even when my initial solutions were incorrect. I found that working through problems publicly, whether I arrived at the correct answer or not, deepened my understanding and helped me identify gaps in my knowledge.
 
+I actively participated in peer learning by helping classmates when they asked for assistance. When peers approached me with questions about homework problems or concepts they were struggling with, I shared my understanding and worked through problems collaboratively. These interactions were mutually beneficial—explaining concepts to others reinforced my own understanding while helping my peers grasp difficult material.
+
+Beyond completing all assigned homework, I engaged with supplementary material including the Natural Number Game and Lean Logic Game, which provided additional practice with formal verification and constructive logic. I also participated in Discord discussions, asking questions about concepts I found challenging and contributing to discussions about the theoretical foundations of programming languages.
+
+My participation extended beyond just completing assignments correctly. I actively engaged with the material by:
 \begin{itemize}
-\item \textbf{Week 1:} Detailed analysis of the MU puzzle, including step-by-step derivation attempts and mathematical proof using invariants
-\item \textbf{Week 2:} Complete analysis of string rewriting systems, including proofs of termination, confluence, and invariant properties
-\item \textbf{Week 3:} Termination analysis of the Euclidean algorithm and merge sort using measure functions
-\item \textbf{Week 4:} Lambda calculus workout with careful step-by-step evaluation of complex expressions
-\item \textbf{Week 5:} Advanced lambda calculus including Church numerals, booleans, and the Y combinator
-\item \textbf{Week 6:} Advanced lambda calculus with Church numerals, boolean operations, and fixed point combinators
-\item \textbf{Week 7:} Parsing theory with derivation tree construction, ambiguity analysis, and context-free grammar analysis
-\item \textbf{Week 12:} Towers of Hanoi with complete recursive execution trace for \texttt{hanoi 5 0 2}, analysis of function call complexity ($2^n - 1$), comparison of stack machine vs rewriting machine models, and proof of the recurrence relation
-\item \textbf{Natural Number Game:} Lean proof solutions for Tutorial World Levels 5-8 with detailed natural language proof for Level 5
-\item \textbf{Lean Logic Game:} Single-line solutions for implication tutorial levels 6-9 in the ``Party Snacks'' tutorial and negation tutorial levels 9-12, demonstrating constructive logic and the Curry-Howard correspondence
+\item Attempting problems in class, even when uncertain about the solution approach
+\item Collaborating with peers to work through challenging concepts
+\item Asking clarifying questions when concepts were unclear
+\item Exploring connections between different topics covered in the course
+\item Engaging with supplementary material to deepen understanding
 \end{itemize}
 
-Each assignment was completed with:
-\begin{itemize}
-\item Careful mathematical reasoning and formal proofs where appropriate
-\item Step-by-step analysis of complex problems
-\item Understanding of the connections between theoretical concepts and practical applications
-\item Recognition of how mathematical properties can be used to prove algorithm correctness
-\end{itemize}
-
-The solutions demonstrate active engagement with formal systems, mathematical reasoning, and the theoretical foundations of programming languages. Each homework builds upon previous concepts, creating a comprehensive understanding of programming language theory from mathematical foundations to practical implementation concerns.
+This active engagement has been essential to my learning process. The opportunity to work through problems, make mistakes, and learn from both my own errors and the insights of my peers has been invaluable in developing a deep understanding of programming language theory.
 
 \section{Conclusion}\label{conclusion}
 
-This comprehensive study of programming language theory has provided invaluable insight into the mathematical foundations of computation. The assignments have demonstrated how:
+This course has fundamentally transformed my understanding of programming languages and computation itself. Stepping back from the technical details, I can now see how this course fits into the broader landscape of software engineering and computer science education.
 
-\begin{itemize}
-\item Formal systems provide powerful frameworks for reasoning about computation
-\item Invariants and measure functions enable rigorous proofs of algorithm correctness
-\item Lambda calculus offers a universal foundation for functional programming
-\item Parsing theory connects abstract syntax to concrete implementation
-\item Mathematical abstraction helps understand the behavior of programming languages
-\end{itemize}
+\subsection{Place in Software Engineering}
 
-The progression from basic formal systems through advanced functional programming concepts has created a solid foundation for understanding programming language theory. The mathematical rigor required throughout these assignments has improved my ability to think formally about computational problems and to construct precise arguments about program behavior.
+In the wider world of software engineering, this course addresses a critical gap: the disconnect between how programmers write code and the mathematical structures that underlie computation. Most programming courses teach syntax and libraries, but this course taught the \textit{why} behind programming language design. Understanding invariants helps me reason about program correctness. Understanding lambda calculus helps me appreciate functional programming paradigms. Understanding parsing helps me understand how compilers work. These theoretical foundations make me a more thoughtful programmer, capable of choosing appropriate abstractions and reasoning about program behavior.
 
-Most importantly, these exercises have revealed the deep connections between theoretical computer science and practical programming. Understanding the mathematical foundations of programming languages is essential for writing reliable software, designing new languages, and building compilers. The concepts learned here will be valuable throughout my career in computer science.
+The emphasis on mathematical rigor is particularly valuable in an industry increasingly concerned with correctness. As software systems become more critical—controlling medical devices, financial systems, and autonomous vehicles—the ability to reason formally about program behavior becomes essential. This course provides the foundational tools for such reasoning.
 
-The experience of working through these puzzles has fundamentally changed how I approach programming problems. I now think more carefully about invariants, termination conditions, and the mathematical properties of algorithms. This foundation will be invaluable as I continue to study computer science and work with different programming paradigms.
+\subsection{Most Interesting and Useful Aspects}
+
+The most fascinating aspect was discovering the Curry-Howard correspondence through the Lean Logic Game. The realization that proofs are programs and programs are proofs was a paradigm shift that connected logic, computation, and mathematics in a way I had never seen before. This correspondence makes type systems, which I previously understood only pragmatically, suddenly make deep mathematical sense.
+
+The most practically useful aspect was learning about invariants and termination analysis. These tools have already changed how I approach algorithm design. I now think about what properties remain unchanged during computation, which helps me understand algorithms more deeply and catch potential bugs earlier. The measure function technique for proving termination is a concrete tool I can apply to any recursive algorithm.
+
+\subsection{Critical Reflection and Suggestions}
+
+While the course content was excellent, I found the transition from imperative to functional thinking challenging. More explicit guidance on this paradigm shift, perhaps through comparison examples showing the same algorithm in both styles, would help students bridge this gap. Additionally, while the theoretical depth was valuable, occasional connections to real-world programming languages (showing how lambda calculus concepts appear in Haskell, or how parsing theory applies to Python's grammar) would help students see immediate practical applications.
+
+The most valuable improvement would be more opportunities for collaborative problem-solving during class. Working through problems with peers, even when we made mistakes, was when I learned the most. Structured group activities or pair programming exercises on theoretical problems could enhance learning.
+
+\subsection{Final Thoughts}
+
+This course has been unlike any other in my computer science education. It didn't just teach me new concepts—it changed how I think about computation itself. I now see programming languages as mathematical objects that can be studied, reasoned about, and understood at a fundamental level. This perspective will inform my work as a software engineer, making me better at choosing the right tools, designing robust systems, and understanding the deeper principles that govern computation.
+
+The mathematical rigor required throughout this course has been challenging but immensely rewarding. I leave this course not just with new knowledge, but with new ways of thinking that will serve me throughout my career in computer science.
 
 \begin{thebibliography}{99}
-\bibitem[GEB]{hofstadter} Douglas Hofstadter, \href{https://en.wikipedia.org/wiki/G%C3%B6del,_Escher,_Bach}{Gödel, Escher, Bach: An Eternal Golden Braid}, Basic Books, 1979.
+\bibitem[GEB]{hofstadter} Douglas Hofstadter, \href{https://en.wikipedia.org/wiki/G\%C3\%B6del,\_Escher,\_Bach}{Gödel, Escher, Bach: An Eternal Golden Braid}, Basic Books, 1979.
+
 \bibitem[Church]{church} Alonzo Church, \href{https://en.wikipedia.org/wiki/Lambda_calculus}{The Calculi of Lambda-Conversion}, Princeton University Press, 1941.
-\bibitem[BNF]{bnf} John Backus, \href{https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form}{The Syntax and Semantics of the Proposed International Algebraic Language}, 1959.
+
+\bibitem[BNF]{bnf} John Backus, \href{https://en.wikipedia.org/wiki/Backus\%E2\%80\%93Naur_form}{The Syntax and Semantics of the Proposed International Algebraic Language}, 1959.
+
 \bibitem[ARS]{ars} Franz Baader and Tobias Nipkow, \href{https://en.wikipedia.org/wiki/Abstract_rewriting_system}{Term Rewriting and All That}, Cambridge University Press, 1998.
-\bibitem[Term]{term} Nachum Dershowitz and Jean-Pierre Jouannaud, \href{https://en.wikipedia.org/wiki/Term_rewriting}{Rewrite Systems}, Handbook of Theoretical Computer Science, 1990.
-\bibitem[Term]{termination} Nachum Dershowitz and Zohar Manna, \href{https://en.wikipedia.org/wiki/Termination_analysis}{Proving Termination with Multiset Orderings}, Communications of the ACM, 1979.
-\bibitem[Euclid]{euclid} Donald Knuth, \href{https://en.wikipedia.org/wiki/Euclidean_algorithm}{The Art of Computer Programming}, Addison-Wesley, 1997.
+
+\bibitem[Term]{term} Nachum Dershowitz and Jean-Pierre Jouannaud, \href{https://en.wikipedia.org/wiki/Term_rewriting}{Rewrite Systems}, Handbook of Theoretical Computer Science, Volume B: Formal Models and Semantics, Elsevier, 1990.
+
+\bibitem[Termination]{termination} Nachum Dershowitz and Zohar Manna, \href{https://en.wikipedia.org/wiki/Termination_analysis}{Proving Termination with Multiset Orderings}, Communications of the ACM, Volume 22, Issue 8, 1979.
+
+\bibitem[Euclid]{euclid} Donald Knuth, \href{https://en.wikipedia.org/wiki/Euclidean_algorithm}{The Art of Computer Programming, Volume 2: Seminumerical Algorithms}, Addison-Wesley, 1997.
+
 \bibitem[Lambda]{lambda} Henk Barendregt, \href{https://en.wikipedia.org/wiki/Lambda_calculus}{The Lambda Calculus: Its Syntax and Semantics}, North-Holland, 1984.
-\bibitem[Y]{ycombinator} Haskell Curry, \href{https://en.wikipedia.org/wiki/Fixed-point_combinator}{The Fixed Point Combinator}, Journal of Symbolic Logic, 1958.
-\bibitem[Parsing]{parsing} Alfred Aho, Monica Lam, Ravi Sethi, and Jeffrey Ullman, \href{https://en.wikipedia.org/wiki/Compiler}{Compilers: Principles, Techniques, and Tools}, Addison-Wesley, 2006.
+
+\bibitem[Y]{ycombinator} Haskell Curry, \href{https://en.wikipedia.org/wiki/Fixed-point_combinator}{The Fixed Point Combinator}, Journal of Symbolic Logic, Volume 23, 1958.
+
+\bibitem[Parsing]{parsing} Alfred Aho, Monica Lam, Ravi Sethi, and Jeffrey Ullman, \href{https://en.wikipedia.org/wiki/Compiler}{Compilers: Principles, Techniques, and Tools}, 2nd Edition, Addison-Wesley, 2006.
+
+\bibitem[CurryHoward]{curryhoward} Philip Wadler, \href{https://en.wikipedia.org/wiki/Curry\%E2\%80\%93Howard_correspondence}{Propositions as Types}, Communications of the ACM, Volume 58, Issue 12, 2015.
+
+\bibitem[Lean]{lean} Leonardo de Moura and Sebastian Ullrich, \href{https://leanprover.github.io/}{The Lean 4 Theorem Prover and Programming Language}, 2021.
 \end{thebibliography}
 
 \end{document}
